@@ -9,5 +9,6 @@
 
     <string name="store_name">Pharm Namoune</string>
     <string name="tab_home">Home</string>
+    <string name="tab_category">Category</string>
 
 </resources>

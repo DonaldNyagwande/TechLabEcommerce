@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.mobidal.pharmacynamoune.adapter.MainFragmentAdapter;
+import com.mobidal.pharmacynamoune.fragment.CategoryFragment;
 import com.mobidal.pharmacynamoune.fragment.HomeFragment;
 
 import butterknife.BindView;
@@ -50,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Add {@link Fragment}s
         mFragmentAdapter.addFragment(new HomeFragment(this), getString(R.string.tab_home), R.drawable.ic_home);
+        mFragmentAdapter.addFragment(new CategoryFragment(this), getString(R.string.tab_category), R.drawable.ic_category);
 
         // Setup {@link Fragment} {@link ViewPager} with {@link Adapter}
         mFragmentViewPager.setAdapter(mFragmentAdapter);
