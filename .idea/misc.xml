@@ -3,7 +3,10 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/AndroidStudioProjects/Projects/PharmacyNamoune/app/src/main/res/drawable/ic_search.xml" value="0.225" />
+        <entry key="..\:/AndroidStudioProjects/Projects/PharmacyNamoune/app/src/main/res/drawable/ic_shopping_basket.xml" value="0.225" />
         <entry key="..\:/AndroidStudioProjects/Projects/PharmacyNamoune/app/src/main/res/layout/activity_main.xml" value="0.371875" />
+        <entry key="..\:/AndroidStudioProjects/Projects/PharmacyNamoune/app/src/main/res/menu/main.xml" value="0.371875" />
       </map>
     </option>
   </component>

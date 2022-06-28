@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Pharmacy Namoune</string>
+
+    <string name="search">Search</string>
+    <string name="shopping_basket">Shopping Basket</string>
+
+    <string name="content_description_search">Search for product</string>
+    <string name="content_description_shopping_basket">Shopping basket products</string>
+
 </resources>
