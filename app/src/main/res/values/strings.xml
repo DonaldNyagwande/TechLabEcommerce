@@ -8,5 +8,6 @@
     <string name="content_description_shopping_basket">Shopping basket products</string>
 
     <string name="store_name">Pharm Namoune</string>
+    <string name="tab_home">Home</string>
 
 </resources>
