@@ -14,6 +14,9 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
@@ -34,6 +37,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @BindView(R.id.vp_fragment) ViewPager2 mFragmentViewPager;
     @BindView(R.id.tl_main) TabLayout mFragmentTabLayout;
+
+    private View mProfileView;
+    private ImageView mPictureImageView;
+    private TextView mNameTextView;
+    private TextView mScoreTextView;
+    private TextView mPhoneTextView;
+    private TextView mEmailTextView;
+    private TextView mLocationTextView;
+    private Button mConnectButton;
 
     MainFragmentAdapter mFragmentAdapter;
 
@@ -64,6 +76,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         // Setup Navigation Drawer Click Listener
         mNavigationView.setNavigationItemSelectedListener(this);
+
+        // Bind views
+        View headerView = mNavigationView.getHeaderView(0);
+
+        mProfileView = (View) headerView.findViewById(R.id.g_profile);
+        mPictureImageView = (ImageView) headerView.findViewById(R.id.iv_picture);
+        mNameTextView = (TextView) headerView.findViewById(R.id.tv_name);
+        mScoreTextView = (TextView) headerView.findViewById(R.id.tv_score);
+        mEmailTextView = (TextView) headerView.findViewById(R.id.tv_email);
+        mPhoneTextView = (TextView) headerView.findViewById(R.id.tv_phone);
+        mLocationTextView = (TextView) headerView.findViewById(R.id.tv_location);
+        mConnectButton = (Button) headerView.findViewById(R.id.b_connect);
     }
 
     private void setupFragmentViewPager() {
