@@ -137,7 +137,8 @@
         android:id="@+id/b_connect"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"
+        android:background="@drawable/bg_button"
+        android:visibility="visible"
         android:text="Connect"
         app:layout_constraintTop_toBottomOf="@id/gl_h_start"
         app:layout_constraintBottom_toTopOf="@id/gl_h_end"
@@ -148,7 +149,7 @@
         android:id="@+id/g_profile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="visible"
+        android:visibility="gone"
         app:constraint_referenced_ids="cv_picture, tv_name, tv_score, iv_phone, tv_phone, iv_email, tv_email, iv_location, tv_location"/>
 
     <androidx.constraintlayout.widget.Barrier
