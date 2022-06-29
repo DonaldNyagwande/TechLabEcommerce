@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="@string/application">
+        <menu>
+            <item
+                android:id="@+id/nav_account"
+                android:icon="@drawable/ic_account"
+                android:title="@string/my_account" />
+            <item
+                android:id="@+id/nav_about"
+                android:icon="@drawable/ic_about_us"
+                android:title="@string/about" />
+        </menu>
+    </item>
+
+    <item android:title="@string/communicate">
+        <menu>
+            <item
+                android:id="@+id/nav_share"
+                android:icon="@drawable/ic_share"
+                android:title="@string/share_application" />
+            <item
+                android:id="@+id/nav_contact"
+                android:icon="@drawable/ic_message"
+                android:title="@string/contact_us" />
+        </menu>
+    </item>
+
+</menu>

@@ -1,9 +1,12 @@
 package com.mobidal.pharmacynamoune;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.Intent;
@@ -13,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.mobidal.pharmacynamoune.adapter.MainFragmentAdapter;
@@ -22,9 +26,12 @@ import com.mobidal.pharmacynamoune.fragment.HomeFragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     @BindView(R.id.tb_main) Toolbar mToolbar;
+    @BindView(R.id.dl_main) DrawerLayout mDrawerLayout;
+    @BindView(R.id.nv_main) NavigationView mNavigationView;
+
     @BindView(R.id.vp_fragment) ViewPager2 mFragmentViewPager;
     @BindView(R.id.tl_main) TabLayout mFragmentTabLayout;
 
@@ -41,8 +48,22 @@ public class MainActivity extends AppCompatActivity {
         // setup the {@link Toolbar}
         setSupportActionBar(mToolbar);
 
+        // Setup Navigation Drawer
+        setupNavigationDrawer();
+
         // Setup {@link ViewPager}
         setupFragmentViewPager();
+    }
+
+    private void setupNavigationDrawer() {
+        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this,
+                mDrawerLayout, mToolbar, R.string.open_drawer, R.string.close_drawer);
+
+        mDrawerLayout.addDrawerListener(actionBarDrawerToggle);
+        actionBarDrawerToggle.syncState();
+
+        // Setup Navigation Drawer Click Listener
+        mNavigationView.setNavigationItemSelectedListener(this);
     }
 
     private void setupFragmentViewPager() {
@@ -93,4 +114,12 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        int itemId = item.getItemId();
+
+        mDrawerLayout.closeDrawer(GravityCompat.START);
+
+        return true;
+    }
 }

@@ -8,7 +8,17 @@
     <string name="content_description_shopping_basket">Shopping basket products</string>
 
     <string name="store_name">Pharm Namoune</string>
+
     <string name="tab_home">Home</string>
     <string name="tab_category">Category</string>
+
+    <string name="application">Application</string>
+    <string name="my_account">My Account</string>
+    <string name="about">About Us</string>
+    <string name="communicate">Communicate</string>
+    <string name="share_application">Share Application</string>
+    <string name="contact_us">Contact Us</string>
+    <string name="open_drawer">Open Drawer</string>
+    <string name="close_drawer">Close Drawer</string>
 
 </resources>
