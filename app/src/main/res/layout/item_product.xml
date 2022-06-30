@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="4dp"
+    android:paddingLeft="8dp"
+    android:paddingRight="8dp"
+    android:paddingBottom="8dp">
+
+    <ImageView
+        android:id="@+id/iv_picture"
+        android:layout_width="100dp"
+        android:layout_height="120dp"
+        android:layout_centerHorizontal="true"
+        android:scaleType="centerInside"
+        tools:src="@drawable/ic_product_1_1" />
+
+    <TextView
+        android:id="@+id/tv_mark"
+        style="@style/ProductMarkTextStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/iv_picture"
+        tools:text="Apple" />
+
+    <TextView
+        android:id="@+id/tv_name"
+        style="@style/ProductNameTextStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_mark"
+        tools:text="Multi-function 10 ports docking station type C" />
+
+    <TextView
+        android:id="@+id/tv_view_number"
+        style="@style/ProductViewsTextStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_name"
+        tools:text="120 Views" />
+
+    <TextView
+        android:id="@+id/tv_price"
+        style="@style/ProductPriceTextStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignBottom="@id/tv_view_number"
+        tools:text="2,999 DA" />
+
+</RelativeLayout>
