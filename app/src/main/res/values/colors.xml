@@ -16,5 +16,6 @@
     <color name="gradient_bg_end_color">#000070CD</color>
 
     <color name="drawerListDivider">#B30062B2</color>
+    <color name="shimmerBackground">#CACACA</color>
 
 </resources>
