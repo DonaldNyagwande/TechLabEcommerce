@@ -75,4 +75,11 @@
         <item name="textAllCaps">true</item>
     </style>
 
+    <!-- General Header text style -->
+    <style name="GeneralHeaderTextStyle">
+        <item name="android:textStyle">bold</item>
+        <item name="textAllCaps">true</item>
+        <item name="android:textColor">@color/primaryTextColor</item>
+    </style>
+
 </resources>
