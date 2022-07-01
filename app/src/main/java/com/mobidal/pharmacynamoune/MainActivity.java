@@ -25,6 +25,7 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import com.mobidal.pharmacynamoune.adapter.MainFragmentAdapter;
 import com.mobidal.pharmacynamoune.fragment.CategoryFragment;
 import com.mobidal.pharmacynamoune.fragment.HomeFragment;
+import com.mobidal.pharmacynamoune.profile.ProfileActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -141,6 +142,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int itemId = item.getItemId();
+
+        switch (itemId) {
+            case R.id.nav_profile:
+                Intent intent = new Intent(this, ProfileActivity.class);
+                startActivity(intent);
+                break;
+        }
 
         mDrawerLayout.closeDrawer(GravityCompat.START);
 

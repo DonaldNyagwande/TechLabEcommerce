@@ -25,5 +25,9 @@
     <string name="price">%1$d DA</string>
     <string name="view_all">View All</string>
     <string name="top_categories">Top Categories</string>
+    <string name="welcome">Welcome</string>
+    <string name="please_insert_your_account">please insert your account</string>
+    <string name="connect">Connect</string>
+    <string name="profile">Profile</string>
 
 </resources>
