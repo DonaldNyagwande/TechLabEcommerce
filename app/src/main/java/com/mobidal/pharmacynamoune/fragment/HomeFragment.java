@@ -92,8 +92,8 @@ public class HomeFragment extends Fragment implements SecondaryCategoryAdapter.O
         List<Category> categoryList = new ArrayList<>();
 
         Category category =
-                new Category(1, "Phone", "",
-                        "https://dz.jumia.is/unsafe/fit-in/680x680/filters:fill(white)/product/55/5423/1.jpg?8047",
+                new Category(1, "Antibiotic", "",
+                        "https://www.pharma-medicaments.com/wp-content/uploads/2022/01/3304746.jpg",
                         null);
 
         categoryList.add(category);
@@ -134,9 +134,9 @@ public class HomeFragment extends Fragment implements SecondaryCategoryAdapter.O
     private void loadIntroCategoryList() {
         // TODO load intro category
         Product product =
-                new Product(1, "Oppo", "Oppo A31",
-                        "Simple description", 24000,
-                        "https://dz.jumia.is/unsafe/fit-in/680x680/filters:fill(white)/product/55/5423/1.jpg?8047",
+                new Product(1, "Doliprane", "Doliprane 1000mg",
+                        "Douleurs et fievre", 300,
+                        "https://www.pharma-medicaments.com/wp-content/uploads/2022/01/3304746.jpg",
                         null, 120, null);
 
         List<Product> productList = new ArrayList<>();
@@ -147,7 +147,7 @@ public class HomeFragment extends Fragment implements SecondaryCategoryAdapter.O
         productList.add(product);
 
         IntroCategory introCategory =
-                new IntroCategory(1, "Phone", "Get the best deal today",
+                new IntroCategory(1, "Antibiotic", "Get the best deal today",
                         productList);
 
         List<IntroCategory> introCategoryList = new ArrayList<>();

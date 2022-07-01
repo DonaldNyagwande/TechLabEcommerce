@@ -74,8 +74,8 @@ public class CategoryFragment extends Fragment implements PrimaryCategoryAdapter
     private void loadCategoryList() {
         // TODO load category list
         Category category =
-                new Category(1, "Phone", "",
-                "https://dz.jumia.is/unsafe/fit-in/680x680/filters:fill(white)/product/55/5423/1.jpg?8047",
+                new Category(1, "Antibiotic", "",
+                "https://www.pharma-medicaments.com/wp-content/uploads/2022/01/3304746.jpg",
                 null);
 
         List<Category> categoryList = new ArrayList<>();
@@ -90,7 +90,7 @@ public class CategoryFragment extends Fragment implements PrimaryCategoryAdapter
         categoryList.add(category);
 
         Category primaryCategory =
-                new Category(1, "Phone", "", null, categoryList);
+                new Category(1, "Antibiotic", "", null, categoryList);
 
         List<Category> primaryCategoryList = new ArrayList<>();
 
