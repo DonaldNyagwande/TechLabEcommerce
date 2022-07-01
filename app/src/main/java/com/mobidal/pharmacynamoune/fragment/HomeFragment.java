@@ -14,9 +14,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.mobidal.pharmacynamoune.R;
+import com.mobidal.pharmacynamoune.adapter.IntroCategoryAdapter;
+import com.mobidal.pharmacynamoune.adapter.ProductAdapter;
 import com.mobidal.pharmacynamoune.adapter.SecondaryCategoryAdapter;
 import com.mobidal.pharmacynamoune.helper.GridSpacingItemDecoration;
 import com.mobidal.pharmacynamoune.model.Category;
+import com.mobidal.pharmacynamoune.model.IntroCategory;
+import com.mobidal.pharmacynamoune.model.Product;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,14 +28,16 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class HomeFragment extends Fragment implements SecondaryCategoryAdapter.OnSecondaryCategoryClickListener {
+public class HomeFragment extends Fragment implements SecondaryCategoryAdapter.OnSecondaryCategoryClickListener, ProductAdapter.OnProductClickListener, IntroCategoryAdapter.OnViewAllClickListener {
 
     private Context mContext;
 
     // Top Secondary Views
     @BindView(R.id.rv_top_secondary_category) RecyclerView mTopCategoryRecyclerView;
+    @BindView(R.id.rv_intro_category) RecyclerView mIntroCategoryRecyclerView;
 
     SecondaryCategoryAdapter mTopCategoryAdapter;
+    IntroCategoryAdapter mIntroCategoryAdapter;
 
     public HomeFragment(Context mContext) {
         this.mContext = mContext;
@@ -51,6 +57,11 @@ public class HomeFragment extends Fragment implements SecondaryCategoryAdapter.O
         // Load Top SecondaryCategory list
         loadTopCategoryList();
 
+        // Setup {@link IntroCategory} RecyclerView
+        setupIntroCategory();
+        // Load {@link IntroCategory}
+        loadIntroCategoryList();
+
         return rootView;
     }
 
@@ -68,17 +79,12 @@ public class HomeFragment extends Fragment implements SecondaryCategoryAdapter.O
         int spacingInPixel =
                 getResources().getDimensionPixelSize(R.dimen.grid_top_category_spacing);
         GridSpacingItemDecoration gridSpacingItemDecoration =
-                new GridSpacingItemDecoration(3, spacingInPixel, true);
+                new GridSpacingItemDecoration(3, spacingInPixel, false);
 
         // Setup {link RecyclerView} for {@link Category}
         mTopCategoryRecyclerView.setLayoutManager(topSecondaryCategoryLayoutManager);
         mTopCategoryRecyclerView.setAdapter(mTopCategoryAdapter);
         mTopCategoryRecyclerView.addItemDecoration(gridSpacingItemDecoration);
-    }
-
-    @Override
-    public void onSecondaryCategoryClicked(Category secondaryCategory) {
-
     }
 
     private void loadTopCategoryList() {
@@ -105,5 +111,70 @@ public class HomeFragment extends Fragment implements SecondaryCategoryAdapter.O
 
         mTopCategoryRecyclerView.setAdapter(null);
         mTopCategoryRecyclerView.setAdapter(mTopCategoryAdapter);
+    }
+
+    private void setupIntroCategory() {
+        LinearLayoutManager introSecondaryCategoryLayoutManager =
+                new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
+        mIntroCategoryAdapter =
+                new IntroCategoryAdapter(mContext, null,
+                        this, this);
+
+        // Create {@link RecyclerView.ItemDecoration}
+        int spacingInPixel =
+                getResources().getDimensionPixelSize(R.dimen.grid_intro_category_spacing);
+        GridSpacingItemDecoration gridSpacingItemDecoration =
+                new GridSpacingItemDecoration(1, spacingInPixel, false);
+
+        mIntroCategoryRecyclerView.setLayoutManager(introSecondaryCategoryLayoutManager);
+        mIntroCategoryRecyclerView.setAdapter(mIntroCategoryAdapter);
+        mIntroCategoryRecyclerView.addItemDecoration(gridSpacingItemDecoration);
+    }
+
+    private void loadIntroCategoryList() {
+        Product.Pivot pivot = new Product.Pivot(false, 1);
+        Product product =
+                new Product(1, "Oppo", "Oppo A31",
+                        "Simple description", 24000,
+                        "https://dz.jumia.is/unsafe/fit-in/680x680/filters:fill(white)/product/55/5423/1.jpg?8047",
+                        null, 120, null);
+
+        List<Product> productList = new ArrayList<>();
+
+        productList.add(product);
+        productList.add(product);
+        productList.add(product);
+        productList.add(product);
+
+        IntroCategory introCategory =
+                new IntroCategory(1, "Phone", "Get the best deal today",
+                        productList);
+
+        List<IntroCategory> introCategoryList = new ArrayList<>();
+        introCategoryList.add(introCategory);
+        introCategoryList.add(introCategory);
+        introCategoryList.add(introCategory);
+        introCategoryList.add(introCategory);
+
+        mIntroCategoryAdapter.setList(introCategoryList);
+        mIntroCategoryAdapter.setLoading(false);
+
+        mIntroCategoryRecyclerView.setAdapter(null);
+        mIntroCategoryRecyclerView.setAdapter(mIntroCategoryAdapter);
+    }
+
+    @Override
+    public void onSecondaryCategoryClicked(Category secondaryCategory) {
+
+    }
+
+    @Override
+    public void onProductClicked(Product product) {
+
+    }
+
+    @Override
+    public void onViewAllClicked(IntroCategory category) {
+
     }
 }

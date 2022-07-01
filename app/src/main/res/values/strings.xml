@@ -23,5 +23,6 @@
 
     <string name="views_number">%1$d views</string>
     <string name="price">%1$d DA</string>
+    <string name="view_all">View All</string>
 
 </resources>

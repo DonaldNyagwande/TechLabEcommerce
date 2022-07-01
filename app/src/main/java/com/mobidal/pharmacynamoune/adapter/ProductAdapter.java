@@ -26,15 +26,15 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     private Context mContext;
     private List<Product> mProductList;
-    private OnArticleClickListener mOnArticleClickListener;
+    private OnProductClickListener mOnProductClickListener;
 
     private boolean mIsLoading = true;
     private int mShimmerItemCount = SHIMMER_ITEM_COUNT;
 
-    public ProductAdapter(Context mContext, List<Product> mProductList, OnArticleClickListener mOnArticleClickListener) {
+    public ProductAdapter(Context mContext, List<Product> mProductList, OnProductClickListener mOnProductClickListener) {
         this.mContext = mContext;
         this.mProductList = mProductList;
-        this.mOnArticleClickListener = mOnArticleClickListener;
+        this.mOnProductClickListener = mOnProductClickListener;
     }
 
     @NonNull
@@ -124,15 +124,15 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         @Override
         public void onClick(View v) {
-            if (mOnArticleClickListener != null) {
-                mOnArticleClickListener.onArticleClicked(mProductList.get(getAdapterPosition()));
+            if (mOnProductClickListener != null) {
+                mOnProductClickListener.onProductClicked(mProductList.get(getAdapterPosition()));
             }
         }
     }
 
     class ShimmerViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.sfl_article)
+        @BindView(R.id.sfl_product)
         ShimmerFrameLayout mCategoryShimmerFrameLayout;
 
         public ShimmerViewHolder(@NonNull View itemView) {
@@ -154,8 +154,8 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
     }
 
-    public interface OnArticleClickListener {
-        void onArticleClicked(Product product);
+    public interface OnProductClickListener {
+        void onProductClicked(Product product);
     }
 
 }

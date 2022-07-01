@@ -8,7 +8,7 @@
     app:cardCornerRadius="0dp">
 
     <com.facebook.shimmer.ShimmerFrameLayout
-        android:id="@+id/sfl_article"
+        android:id="@+id/sfl_product"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 

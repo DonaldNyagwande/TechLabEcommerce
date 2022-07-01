@@ -19,6 +19,18 @@ public class Product {
     private int viewNumber;
     private Pivot pivot;
 
+    public Product(int id, String mark, String name, String description, int price, String pictureUrl, List<Picture> pictureList, int viewNumber, Pivot pivot) {
+        this.id = id;
+        this.mark = mark;
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.pictureUrl = pictureUrl;
+        this.pictureList = pictureList;
+        this.viewNumber = viewNumber;
+        this.pivot = pivot;
+    }
+
     public int getId() {
         return id;
     }
@@ -55,11 +67,16 @@ public class Product {
         return pivot;
     }
 
-    public class Pivot {
+    public static class Pivot {
 
         @SerializedName("is_saved")
         private boolean isSaved;
         private int quantity;
+
+        public Pivot(boolean isSaved, int quantity) {
+            this.isSaved = isSaved;
+            this.quantity = quantity;
+        }
 
         public boolean isSaved() {
             return isSaved;
