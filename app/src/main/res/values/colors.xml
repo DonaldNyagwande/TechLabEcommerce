@@ -8,9 +8,13 @@
     <color name="blue_700">#0062b2</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="grey">#333333</color>
 
     <color name="primaryBackgroundColor">#E7E7E7</color>
     <color name="secondaryBackgroundColor">#FFFFFF</color>
+
+    <color name="primaryTextColor">@color/grey</color>
+    <color name="secondaryTextColor">@color/white</color>
 
     <color name="colorAccent">@color/blue_700</color>
 

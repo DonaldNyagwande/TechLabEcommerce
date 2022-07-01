@@ -38,4 +38,8 @@ public class Category {
     public String getPictureUrl() {
         return pictureUrl;
     }
+
+    public List<Category> getCategoryList() {
+        return categoryList;
+    }
 }
