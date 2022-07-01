@@ -13,14 +13,14 @@
 
         <TextView
             android:id="@+id/tv_name"
-            style="@style/IntroSecondaryCategoryNameTextStyle"
+            style="@style/IntroCategoryNameTextStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:text="Laptop" />
 
         <TextView
             android:id="@+id/tv_offer_text"
-            style="@style/IntroSecondaryCategoryOfferTextStyle"
+            style="@style/IntroCategoryOfferTextStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_name"
@@ -28,7 +28,7 @@
 
         <TextView
             android:id="@+id/tv_view_all"
-            style="@style/IntroSecondaryCategoryViewAllTextStyle"
+            style="@style/IntroCategoryViewAllTextStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
