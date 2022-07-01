@@ -132,7 +132,7 @@ public class HomeFragment extends Fragment implements SecondaryCategoryAdapter.O
     }
 
     private void loadIntroCategoryList() {
-        Product.Pivot pivot = new Product.Pivot(false, 1);
+        // TODO load intro category
         Product product =
                 new Product(1, "Oppo", "Oppo A31",
                         "Simple description", 24000,
