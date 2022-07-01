@@ -55,15 +55,15 @@
         <item name="android:textColor">@color/black</item>
     </style>
 
-    <style name="IntroSecondaryCategoryNameTextStyle">
+    <style name="IntroCategoryNameTextStyle">
         <item name="android:textSize">16sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/white</item>
     </style>
-    <style name="IntroSecondaryCategoryOfferTextStyle">
+    <style name="IntroCategoryOfferTextStyle">
         <item name="android:textColor">@color/white</item>
     </style>
-    <style name="IntroSecondaryCategoryViewAllTextStyle">
+    <style name="IntroCategoryViewAllTextStyle">
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/white</item>
     </style>
