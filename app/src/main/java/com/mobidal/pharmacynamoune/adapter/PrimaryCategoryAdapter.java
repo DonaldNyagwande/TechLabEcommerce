@@ -146,7 +146,7 @@ public class PrimaryCategoryAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         private void setupSecondaryCategoryList() {
             // Create {@link GridLayoutManager} for the {@link SecondaryCategory} {@link RecyclerView}
             GridLayoutManager secondaryCategoryLayoutManager =
-                    new GridLayoutManager(mContext, 3);
+                    new GridLayoutManager(mContext, 2);
             secondaryCategoryLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 
             mCategoryAdapter = new SecondaryCategoryAdapter(mContext,
@@ -156,7 +156,7 @@ public class PrimaryCategoryAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             int spacingInPixel = mContext.getResources()
                     .getDimensionPixelSize(R.dimen.grid_secondary_category_spacing);
             GridSpacingItemDecoration gridSpacingItemDecoration =
-                    new GridSpacingItemDecoration(3, spacingInPixel, false);
+                    new GridSpacingItemDecoration(2, spacingInPixel, false);
 
             // Setup {link RecyclerView} for {@link SecondaryCategory}
             mCategoryRecyclerView.setLayoutManager(secondaryCategoryLayoutManager);

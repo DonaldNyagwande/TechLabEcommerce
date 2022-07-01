@@ -68,7 +68,7 @@ public class HomeFragment extends Fragment implements SecondaryCategoryAdapter.O
     private void setupTopCategory() {
         // Create {@link GridLayoutManager} for the {@link Category} {@link RecyclerView}
         GridLayoutManager topSecondaryCategoryLayoutManager =
-                new GridLayoutManager(mContext, 3);
+                new GridLayoutManager(mContext, 2);
         topSecondaryCategoryLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 
         // Create {@link SecondaryCategoryAdapter}
@@ -79,7 +79,7 @@ public class HomeFragment extends Fragment implements SecondaryCategoryAdapter.O
         int spacingInPixel =
                 getResources().getDimensionPixelSize(R.dimen.grid_top_category_spacing);
         GridSpacingItemDecoration gridSpacingItemDecoration =
-                new GridSpacingItemDecoration(3, spacingInPixel, false);
+                new GridSpacingItemDecoration(2, spacingInPixel, false);
 
         // Setup {link RecyclerView} for {@link Category}
         mTopCategoryRecyclerView.setLayoutManager(topSecondaryCategoryLayoutManager);
@@ -96,9 +96,6 @@ public class HomeFragment extends Fragment implements SecondaryCategoryAdapter.O
                         "https://www.pharma-medicaments.com/wp-content/uploads/2022/01/3304746.jpg",
                         null);
 
-        categoryList.add(category);
-        categoryList.add(category);
-        categoryList.add(category);
         categoryList.add(category);
         categoryList.add(category);
         categoryList.add(category);
