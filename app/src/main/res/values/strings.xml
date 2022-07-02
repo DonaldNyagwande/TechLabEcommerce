@@ -29,5 +29,10 @@
     <string name="please_insert_your_account">please insert your account</string>
     <string name="connect">Connect</string>
     <string name="profile">Profile</string>
+    <string name="coding_amp_designing">Coding and Designing</string>
+    <string name="back_end">Backend</string>
+    <string name="company">Company</string>
+    <string name="mail">E-mail</string>
+    <string name="version">Version</string>
 
 </resources>

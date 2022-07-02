@@ -126,17 +126,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int itemId = item.getItemId();
 
-        switch (itemId) {
-            case R.id.action_shopping_basket:
-                shoppingBasketAction();
-                return true;
-        }
-
         return super.onOptionsItemSelected(item);
-    }
-
-    private void shoppingBasketAction() {
-
     }
 
     @Override
@@ -145,8 +135,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         switch (itemId) {
             case R.id.nav_profile:
-                Intent intent = new Intent(this, ProfileActivity.class);
-                startActivity(intent);
+                Intent profileIntent = new Intent(this, ProfileActivity.class);
+                startActivity(profileIntent);
+                break;
+            case R.id.nav_about:
+                Intent aboutIntent = new Intent(this, AboutActivity.class);
+                startActivity(aboutIntent);
                 break;
         }
 
