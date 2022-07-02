@@ -83,8 +83,8 @@
     </style>
 
     <style name="ButtonTextStyle">
-        <item name="android:background">@color/colorAccent</item>
         <item name="android:textColor">@color/white</item>
+        <item name="android:background">@drawable/bg_button</item>
     </style>
 
     <style name="WelcomeTextStyle">
