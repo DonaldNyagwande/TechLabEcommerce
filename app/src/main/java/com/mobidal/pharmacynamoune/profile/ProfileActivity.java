@@ -1,9 +1,13 @@
 package com.mobidal.pharmacynamoune.profile;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -14,6 +18,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class ProfileActivity extends AppCompatActivity {
+
+    @BindView(R.id.tb_main) Toolbar mToolbar;
 
     @BindView(R.id.tv_welcome) TextView mWelcomeTextView;
     @BindView(R.id.tv_welcome_description) TextView mWelcomeDescriptionTextView;
@@ -36,8 +42,38 @@ public class ProfileActivity extends AppCompatActivity {
         // Bind views
         ButterKnife.bind(this);
 
+        // setup the {@link Toolbar}
+        setupToolbar();
+
         // Setup profile
         setupProfile();
+    }
+
+    private void setupToolbar() {
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setTitle("Profile");
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int itemId = item.getItemId();
+
+        switch (itemId) {
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     private void setupProfile() {
