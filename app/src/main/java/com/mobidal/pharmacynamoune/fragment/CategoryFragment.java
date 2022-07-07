@@ -1,6 +1,7 @@
 package com.mobidal.pharmacynamoune.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.mobidal.pharmacynamoune.ProductListActivity;
 import com.mobidal.pharmacynamoune.R;
 import com.mobidal.pharmacynamoune.adapter.PrimaryCategoryAdapter;
 import com.mobidal.pharmacynamoune.adapter.SecondaryCategoryAdapter;
@@ -106,11 +108,19 @@ public class CategoryFragment extends Fragment implements PrimaryCategoryAdapter
 
     @Override
     public void onPrimaryCategoryClicked(Category category) {
+        Intent intent = new Intent(mContext, ProductListActivity.class);
 
+        intent.putExtra(ProductListActivity.EXTRA_CATEGORY_ID, category.getId());
+
+        startActivity(intent);
     }
 
     @Override
-    public void onSecondaryCategoryClicked(Category secondaryCategory) {
+    public void onSecondaryCategoryClicked(Category category) {
+        Intent intent = new Intent(mContext, ProductListActivity.class);
 
+        intent.putExtra(ProductListActivity.EXTRA_CATEGORY_ID, category.getId());
+
+        startActivity(intent);
     }
 }

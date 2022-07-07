@@ -34,5 +34,6 @@
     <string name="company">Company</string>
     <string name="mail">E-mail</string>
     <string name="version">Version</string>
+    <string name="product_list">Product List</string>
 
 </resources>

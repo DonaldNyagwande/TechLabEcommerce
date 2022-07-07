@@ -1,6 +1,7 @@
 package com.mobidal.pharmacynamoune.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.mobidal.pharmacynamoune.ProductListActivity;
 import com.mobidal.pharmacynamoune.R;
 import com.mobidal.pharmacynamoune.adapter.IntroCategoryAdapter;
 import com.mobidal.pharmacynamoune.adapter.ProductAdapter;
@@ -161,8 +163,12 @@ public class HomeFragment extends Fragment implements SecondaryCategoryAdapter.O
     }
 
     @Override
-    public void onSecondaryCategoryClicked(Category secondaryCategory) {
+    public void onSecondaryCategoryClicked(Category category) {
+        Intent intent = new Intent(mContext, ProductListActivity.class);
 
+        intent.putExtra(ProductListActivity.EXTRA_CATEGORY_ID, category.getId());
+
+        startActivity(intent);
     }
 
     @Override
@@ -172,6 +178,10 @@ public class HomeFragment extends Fragment implements SecondaryCategoryAdapter.O
 
     @Override
     public void onViewAllClicked(IntroCategory category) {
+        Intent intent = new Intent(mContext, ProductListActivity.class);
 
+        intent.putExtra(ProductListActivity.EXTRA_CATEGORY_ID, category.getId());
+
+        startActivity(intent);
     }
 }
