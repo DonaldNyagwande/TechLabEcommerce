@@ -8,17 +8,17 @@ public class Category {
 
     private int id;
     private String name;
-    @SerializedName("text_offer")
-    private String textOffer;
+    @SerializedName("offer_text")
+    private String offerText;
     @SerializedName("picture_url")
     private String pictureUrl;
     @SerializedName("_categories")
     private List<Category> categoryList;
 
-    public Category(int id, String name, String textOffer, String pictureUrl, List<Category> categoryList) {
+    public Category(int id, String name, String offerText, String pictureUrl, List<Category> categoryList) {
         this.id = id;
         this.name = name;
-        this.textOffer = textOffer;
+        this.offerText = offerText;
         this.pictureUrl = pictureUrl;
         this.categoryList = categoryList;
     }
@@ -31,8 +31,8 @@ public class Category {
         return name;
     }
 
-    public String getTextOffer() {
-        return textOffer;
+    public String getOfferText() {
+        return offerText;
     }
 
     public String getPictureUrl() {
