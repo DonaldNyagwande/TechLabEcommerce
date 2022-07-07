@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.mobidal.pharmacynamoune.ProductActivity;
 import com.mobidal.pharmacynamoune.ProductListActivity;
 import com.mobidal.pharmacynamoune.R;
 import com.mobidal.pharmacynamoune.adapter.IntroCategoryAdapter;
@@ -173,7 +174,11 @@ public class HomeFragment extends Fragment implements SecondaryCategoryAdapter.O
 
     @Override
     public void onProductClicked(Product product) {
+        Intent intent = new Intent(mContext, ProductActivity.class);
 
+        intent.putExtra(ProductActivity.EXTRA_PRODUCT_ID, product.getId());
+
+        startActivity(intent);
     }
 
     @Override

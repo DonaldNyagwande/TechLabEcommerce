@@ -8,6 +8,11 @@ public class Picture {
     @SerializedName("picture_url")
     private String mPictureUrl;
 
+    public Picture(int id, String mPictureUrl) {
+        this.id = id;
+        this.mPictureUrl = mPictureUrl;
+    }
+
     public int getId() {
         return id;
     }

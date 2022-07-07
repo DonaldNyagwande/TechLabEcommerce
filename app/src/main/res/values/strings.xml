@@ -35,5 +35,10 @@
     <string name="mail">E-mail</string>
     <string name="version">Version</string>
     <string name="product_list">Product List</string>
+    <string name="product_details">Product Details</string>
+    <string name="description">Description</string>
+    <string name="product_saved">Product Saved</string>
+    <string name="product_unsaved">Product Unsaved</string>
+    <string name="your_purchase_has_been_successfully_completed">Your purchase has been successfully completed</string>
 
 </resources>
