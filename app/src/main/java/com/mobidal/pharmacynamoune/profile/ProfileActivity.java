@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.mobidal.pharmacynamoune.ProductActivity;
 import com.mobidal.pharmacynamoune.R;
 
 import butterknife.BindView;
@@ -94,7 +95,8 @@ public class ProfileActivity extends AppCompatActivity {
         mSavedProductsView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent intent = new Intent(ProfileActivity.this, FavoriteActivity.class);
+                startActivity(intent);
             }
         });
 

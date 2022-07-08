@@ -1,4 +1,4 @@
-package com.mobidal.pharmacynamoune;
+package com.mobidal.pharmacynamoune.profile;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,6 +14,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.mobidal.pharmacynamoune.ProductActivity;
+import com.mobidal.pharmacynamoune.R;
 import com.mobidal.pharmacynamoune.adapter.ProductAdapter;
 import com.mobidal.pharmacynamoune.helper.GridSpacingItemDecoration;
 import com.mobidal.pharmacynamoune.model.Product;
@@ -24,9 +26,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class ProductListActivity extends AppCompatActivity implements ProductAdapter.OnProductClickListener {
-
-    public static final String EXTRA_CATEGORY_ID = "extra_category_id";
+public class FavoriteActivity extends AppCompatActivity implements ProductAdapter.OnProduct2ClickListener {
 
     @BindView(R.id.tb_main) Toolbar mToolbar;
     @BindView(R.id.v_main) View mMainView;
@@ -38,7 +38,7 @@ public class ProductListActivity extends AppCompatActivity implements ProductAda
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_product_list);
+        setContentView(R.layout.activity_favorite);
 
         // Bind Views
         ButterKnife.bind(this);
@@ -46,10 +46,10 @@ public class ProductListActivity extends AppCompatActivity implements ProductAda
         // setup the {@link Toolbar}
         setupToolbar();
 
-        // setup {@Product} list
+        // setup {@Article} list
         setupProductList();
-        // Load {@Product} list
-        loadProductList(getIntent());
+        // Load {@Article} list
+        loadProductList();
     }
 
     @Override
@@ -72,65 +72,59 @@ public class ProductListActivity extends AppCompatActivity implements ProductAda
         return super.onOptionsItemSelected(item);
     }
 
-    private void setupToolbar() {
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setTitle(R.string.product_list);
-    }
-
     private void setupProductList() {
         GridLayoutManager gridLayoutManager =
-                new GridLayoutManager(this, 2);
-
-        mProductAdapter =
-                new ProductAdapter(this, null, ProductAdapter.TYPE_ONE);
-
-        mProductAdapter.setOnProductClickListener(this);
-        mProductAdapter.setShimmerItemCount(8);
+                new GridLayoutManager(this, 1);
 
         // Create {@link RecyclerView.ItemDecoration}
         int spacingInPixel =
                 getResources().getDimensionPixelSize(R.dimen.grid_product_spacing);
         GridSpacingItemDecoration gridSpacingItemDecoration =
-                new GridSpacingItemDecoration(2, spacingInPixel, false);
+                new GridSpacingItemDecoration(1, spacingInPixel, false);
+
+        mProductAdapter =
+                new ProductAdapter(this, null, ProductAdapter.TYPE_TWO);
+
+        mProductAdapter.setOnProduct2ClickListener(this);
 
         mProductRecyclerView.setLayoutManager(gridLayoutManager);
         mProductRecyclerView.setAdapter(mProductAdapter);
         mProductRecyclerView.addItemDecoration(gridSpacingItemDecoration);
     }
 
-    private void loadProductList(Intent intent) {
+    private void loadProductList() {
         // TODO load product list
-        if (intent != null) {
-            if (intent.hasExtra(EXTRA_CATEGORY_ID)) {
+        Product product =
+                new Product(1, "Doliprane", "Doliprane 1000mg",
+                        "Douleurs et fievre", 300,
+                        "https://www.pharma-medicaments.com/wp-content/uploads/2022/01/3304746.jpg",
+                        null, 120, null);
 
-            }
+        List<Product> productList = new ArrayList<>();
 
-            Product product =
-                    new Product(1, "Doliprane", "Doliprane 1000mg",
-                            "Douleurs et fievre", 300,
-                            "https://www.pharma-medicaments.com/wp-content/uploads/2022/01/3304746.jpg",
-                            null, 120, null);
+        productList.add(product);
+        productList.add(product);
+        productList.add(product);
+        productList.add(product);
+        productList.add(product);
+        productList.add(product);
+        productList.add(product);
+        productList.add(product);
 
-            List<Product> productList = new ArrayList<>();
+        mProductRecyclerView.setAdapter(null);
 
-            productList.add(product);
-            productList.add(product);
-            productList.add(product);
-            productList.add(product);
-            productList.add(product);
-            productList.add(product);
-            productList.add(product);
-            productList.add(product);
+        mProductAdapter.setLoading(false);
+        mProductAdapter.setAll(productList);
 
-            mProductAdapter.setLoading(false);
-            mProductAdapter.setAll(productList);
+        mProductRecyclerView.setAdapter(mProductAdapter);
 
-            mProductRecyclerView.setAdapter(null);
-            mProductRecyclerView.setAdapter(mProductAdapter);
+    }
 
-        }
+    private void setupToolbar() {
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setTitle(getString(R.string.favorite));
     }
 
     @Override
@@ -140,5 +134,18 @@ public class ProductListActivity extends AppCompatActivity implements ProductAda
         intent.putExtra(ProductActivity.EXTRA_PRODUCT_ID, product.getId());
 
         startActivity(intent);
+    }
+
+    @Override
+    public void onDeleteClicked(Product product, int adapterPosition) {
+        mProductAdapter.remove(adapterPosition);
+        Toast.makeText(this,
+                getString(R.string.product_removed_from_favorite_list), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onPurchaseClicked(Product product) {
+        Toast.makeText(this,
+                getString(R.string.the_product_has_been_purchased), Toast.LENGTH_SHORT).show();
     }
 }

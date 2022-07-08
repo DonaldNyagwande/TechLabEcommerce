@@ -4,6 +4,8 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -24,26 +26,44 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     private static final int SHIMMER_ITEM_COUNT = 4;
 
+    public static final int TYPE_ONE = 1;
+    public static final int TYPE_TWO = 2;
+
     private Context mContext;
     private List<Product> mProductList;
     private OnProductClickListener mOnProductClickListener;
+    private OnProduct2ClickListener mOnProduct2ClickListener;
 
+    private int mType = TYPE_ONE;
     private boolean mIsLoading = true;
     private int mShimmerItemCount = SHIMMER_ITEM_COUNT;
 
-    public ProductAdapter(Context mContext, List<Product> mProductList, OnProductClickListener mOnProductClickListener) {
+    public ProductAdapter(Context mContext, List<Product> mProductList, int mType) {
         this.mContext = mContext;
         this.mProductList = mProductList;
         this.mOnProductClickListener = mOnProductClickListener;
+        this.mType = mType;
     }
 
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        int layoutId = R.layout.item_placeholder_product;
+        int layoutId;
 
-        if (!mIsLoading) {
-            layoutId = R.layout.item_product;
+        if (mType == TYPE_ONE) {
+            // Product type one
+            if (mIsLoading) {
+                layoutId = R.layout.item_placeholder_product;
+            } else {
+                layoutId = R.layout.item_product;
+            }
+        } else {
+            // Product type two
+            if (mIsLoading) {
+                layoutId = R.layout.item_placeholder_product_2;
+            } else {
+                layoutId = R.layout.item_product_2;
+            }
         }
 
         View itemView = LayoutInflater.from(mContext)
@@ -52,7 +72,14 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         if (mIsLoading) {
             return new ShimmerViewHolder(itemView);
         } else {
-            return new ArticleViewHolder(itemView);
+            if (mType == TYPE_ONE) {
+                // Product type one
+                return new ProductViewHolder(itemView);
+            } else {
+                // Product type two
+                return new Product2ViewHolder(itemView);
+            }
+
         }
     }
 
@@ -62,8 +89,15 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             ShimmerViewHolder viewHolder = (ShimmerViewHolder) holder;
             viewHolder.startShimmer();
         } else {
-            ArticleViewHolder viewHolder = (ArticleViewHolder) holder;
-            viewHolder.bind(mProductList.get(position));
+            if (mType == TYPE_ONE) {
+                // Product type one
+                ProductViewHolder viewHolder = (ProductViewHolder) holder;
+                viewHolder.bind(mProductList.get(position));
+            } else {
+                // Product type two
+                Product2ViewHolder viewHolder = (Product2ViewHolder) holder;
+                viewHolder.bind(mProductList.get(position));
+            }
         }
     }
 
@@ -74,6 +108,14 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         } else {
             return mProductList == null ? 0 : mProductList.size();
         }
+    }
+
+    public void setOnProductClickListener(OnProductClickListener onProductClickListener) {
+        mOnProductClickListener = onProductClickListener;
+    }
+
+    public void setOnProduct2ClickListener(OnProduct2ClickListener onProduct2ClickListener) {
+        mOnProduct2ClickListener = onProduct2ClickListener;
     }
 
     public void setAll(List<Product> productList) {
@@ -89,17 +131,20 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         mShimmerItemCount = shimmerItemCount;
     }
 
-    class ArticleViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public void remove(int position) {
+        mProductList.remove(position);
+        notifyDataSetChanged();
+    }
 
-        @BindView(R.id.iv_picture)
-        ImageView mPictureImageView;
-        @BindView(R.id.tv_mark)
-        TextView mMarkTextView;
+    class ProductViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
+        @BindView(R.id.iv_picture) ImageView mPictureImageView;
+        @BindView(R.id.tv_mark) TextView mMarkTextView;
         @BindView(R.id.tv_name) TextView mNameTextView;
         @BindView(R.id.tv_view_number) TextView mViewNumberTextView;
         @BindView(R.id.tv_price) TextView mPriceTextView;
 
-        public ArticleViewHolder(@NonNull View itemView) {
+        public ProductViewHolder(@NonNull View itemView) {
             super(itemView);
 
             // Bind views
@@ -130,6 +175,77 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
     }
 
+    class Product2ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
+        @BindView(R.id.v_product) View mProductView;
+
+        @BindView(R.id.iv_picture) ImageView mPictureImageView;
+        @BindView(R.id.tv_mark) TextView mMarkTextView;
+        @BindView(R.id.tv_name) TextView mNameTextView;
+        @BindView(R.id.tv_price) TextView mPriceTextView;
+
+        @BindView(R.id.b_remove) Button mRemoveButton;
+        @BindView(R.id.b_purchase) Button mPurchaseButton;
+
+        public Product2ViewHolder(@NonNull View itemView) {
+            super(itemView);
+
+            // Bind views
+            ButterKnife.bind(this, itemView);
+
+            // Setup product click listener
+            mProductView.setOnClickListener(this);
+
+            // Setup remove product click listener
+            setupRemoveProduct();
+
+            // Setup purchase product click listener
+            setupPurchaseProduct();
+        }
+
+        private void setupPurchaseProduct() {
+            mPurchaseButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (mOnProduct2ClickListener != null) {
+                        mOnProduct2ClickListener
+                                .onPurchaseClicked(mProductList.get(getAdapterPosition()));
+                    }
+                }
+            });
+        }
+
+        private void setupRemoveProduct() {
+            mRemoveButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (mOnProduct2ClickListener != null) {
+                        mOnProduct2ClickListener
+                                .onDeleteClicked(mProductList.get(getAdapterPosition()),
+                                        getAdapterPosition());
+                    }
+                }
+            });
+        }
+
+        public void bind(Product product) {
+            Picasso.get()
+                    .load(product.getPictureUrl())
+                    .placeholder(R.drawable.ic_image_placeholder)
+                    .into(mPictureImageView);
+            mMarkTextView.setText(product.getMark());
+            mNameTextView.setText(product.getName());
+            mPriceTextView.setText(mContext.getString(R.string.price, product.getPrice()));
+        }
+
+        @Override
+        public void onClick(View v) {
+            if (mOnProduct2ClickListener != null) {
+                mOnProduct2ClickListener.onProductClicked(mProductList.get(getAdapterPosition()));
+            }
+        }
+    }
+
     class ShimmerViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.sfl_product)
@@ -156,6 +272,12 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     public interface OnProductClickListener {
         void onProductClicked(Product product);
+    }
+
+    public interface OnProduct2ClickListener {
+        void onProductClicked(Product product);
+        void onDeleteClicked(Product product, int adapterPosition);
+        void onPurchaseClicked(Product product);
     }
 
 }

@@ -40,5 +40,10 @@
     <string name="product_saved">Product Saved</string>
     <string name="product_unsaved">Product Unsaved</string>
     <string name="your_purchase_has_been_successfully_completed">Your purchase has been successfully completed</string>
+    <string name="remove">Remove</string>
+    <string name="purchase">Purchase</string>
+    <string name="favorite">Favorite</string>
+    <string name="product_removed_from_favorite_list">Product removed from favorite list</string>
+    <string name="the_product_has_been_purchased">The product has been purchased</string>
 
 </resources>

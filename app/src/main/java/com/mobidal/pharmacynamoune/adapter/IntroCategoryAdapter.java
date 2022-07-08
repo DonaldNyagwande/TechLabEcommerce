@@ -114,8 +114,9 @@ public class IntroCategoryAdapter extends RecyclerView
             GridLayoutManager gridLayoutManager =
                     new GridLayoutManager(mContext, 2);
             mProductAdapter =
-                    new ProductAdapter(mContext, null,this);
+                    new ProductAdapter(mContext, null, ProductAdapter.TYPE_ONE);
 
+            mProductAdapter.setOnProductClickListener(this);
             mProductAdapter.setLoading(false);
 
             mProductRecyclerView.setLayoutManager(gridLayoutManager);
@@ -176,7 +177,7 @@ public class IntroCategoryAdapter extends RecyclerView
             GridLayoutManager gridLayoutManager =
                     new GridLayoutManager(mContext, 2);
             mProductAdapter =
-                    new ProductAdapter(mContext, null, null);
+                    new ProductAdapter(mContext, null, ProductAdapter.TYPE_ONE);
 
             mArticleRecyclerView.setLayoutManager(gridLayoutManager);
             mArticleRecyclerView.setAdapter(mProductAdapter);
