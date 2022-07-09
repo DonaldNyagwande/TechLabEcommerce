@@ -128,7 +128,11 @@ public class RecentlyViewedActivity extends AppCompatActivity implements Product
 
     @Override
     public void onProductClicked(Product product) {
+        Intent intent = new Intent(this, ProductActivity.class);
 
+        intent.putExtra(ProductActivity.EXTRA_PRODUCT_ID, product.getId());
+
+        startActivity(intent);
     }
 
     @Override
