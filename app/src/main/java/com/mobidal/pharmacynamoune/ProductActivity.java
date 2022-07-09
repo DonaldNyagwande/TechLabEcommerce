@@ -210,7 +210,7 @@ public class ProductActivity extends AppCompatActivity implements PictureAdapter
             pictureList.add(picture);
             pictureList.add(picture);
 
-            Product.Pivot pivot = new Product.Pivot(false, 0);
+            Product.Pivot pivot = new Product.Pivot(false, 1);
 
             mProduct = new Product(1, "Doliprane", "Doliprane 1000mg",
                     "DOLIPRANE est un antalgique (calme la douleur) et un antipyrétique (fait baisser la fièvre).\n" +
