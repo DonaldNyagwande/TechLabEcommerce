@@ -45,5 +45,6 @@
     <string name="favorite">Favorite</string>
     <string name="product_removed_from_favorite_list">Product removed from favorite list</string>
     <string name="the_product_has_been_purchased">The product has been purchased</string>
+    <string name="recently_viewed">Recently Viewed</string>
 
 </resources>

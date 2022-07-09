@@ -103,7 +103,9 @@ public class ProfileActivity extends AppCompatActivity {
         mRecentlyViewedView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent intent =
+                        new Intent(ProfileActivity.this, RecentlyViewedActivity.class);
+                startActivity(intent);
             }
         });
 
