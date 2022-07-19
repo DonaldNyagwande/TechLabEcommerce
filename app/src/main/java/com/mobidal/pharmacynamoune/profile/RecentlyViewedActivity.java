@@ -65,9 +65,17 @@ public class RecentlyViewedActivity extends AppCompatActivity implements Product
             case android.R.id.home:
                 finish();
                 return true;
+            case R.id.action_shopping_basket:
+                shoppingBasketAction();
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void shoppingBasketAction() {
+        Intent intent = new Intent(this, ShoppingBasketActivity.class);
+        startActivity(intent);
     }
 
     private void setupProductList() {

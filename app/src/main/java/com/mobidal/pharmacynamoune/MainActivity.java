@@ -26,6 +26,7 @@ import com.mobidal.pharmacynamoune.adapter.MainFragmentAdapter;
 import com.mobidal.pharmacynamoune.fragment.CategoryFragment;
 import com.mobidal.pharmacynamoune.fragment.HomeFragment;
 import com.mobidal.pharmacynamoune.profile.ProfileActivity;
+import com.mobidal.pharmacynamoune.profile.ShoppingBasketActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -126,7 +127,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int itemId = item.getItemId();
 
+        switch (itemId) {
+            case R.id.action_shopping_basket:
+                shoppingBasketAction();
+                return true;
+        }
+
         return super.onOptionsItemSelected(item);
+    }
+
+    private void shoppingBasketAction() {
+        Intent intent = new Intent(this, ShoppingBasketActivity.class);
+        startActivity(intent);
     }
 
     @Override

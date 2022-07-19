@@ -126,7 +126,7 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 viewHolder.bind(mProductList.get(position));
             } else {
                 // Product type four
-                Product3ViewHolder viewHolder = (Product3ViewHolder) holder;
+                Product4ViewHolder viewHolder = (Product4ViewHolder) holder;
                 viewHolder.bind(mProductList.get(position));
             }
         }
@@ -381,11 +381,12 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             mDecrementView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (mOnProduct3ClickListener != null) {
+                    if (mOnProduct4ClickListener != null) {
                         Product product = mProductList.get(getAdapterPosition());
 
                         if (product.getPivot().getQuantity() > 1) {
-                            mOnProduct4ClickListener.onDecrementClicked(product);
+                            mOnProduct4ClickListener
+                                    .onDecrementClicked(product, getAdapterPosition());
                         }
                     }
                 }
@@ -396,10 +397,11 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             mIncrementView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (mOnProduct3ClickListener != null) {
+                    if (mOnProduct4ClickListener != null) {
                         Product product = mProductList.get(getAdapterPosition());
 
-                        mOnProduct4ClickListener.onIncrementClicked(product);
+                        mOnProduct4ClickListener
+                                .onIncrementClicked(product, getAdapterPosition());
                     }
                 }
             });
@@ -409,8 +411,8 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             mRemoveButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (mOnProduct2ClickListener != null) {
-                        mOnProduct2ClickListener
+                    if (mOnProduct4ClickListener != null) {
+                        mOnProduct4ClickListener
                                 .onDeleteClicked(mProductList.get(getAdapterPosition()),
                                         getAdapterPosition());
                     }
@@ -467,7 +469,7 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     public interface OnProduct2ClickListener {
         void onProductClicked(Product product);
-        void onDeleteClicked(Product product, int adapterPosition);
+        void onDeleteClicked(Product product, int position);
         void onPurchaseClicked(Product product);
     }
 
@@ -478,8 +480,9 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     public interface OnProduct4ClickListener {
         void onProductClicked(Product product);
-        void onDecrementClicked(Product product);
-        void onIncrementClicked(Product product);
+        void onDeleteClicked(Product product, int position);
+        void onDecrementClicked(Product product, int position);
+        void onIncrementClicked(Product product, int position);
     }
 
 }

@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.mobidal.pharmacynamoune.adapter.ProductAdapter;
 import com.mobidal.pharmacynamoune.helper.GridSpacingItemDecoration;
 import com.mobidal.pharmacynamoune.model.Product;
+import com.mobidal.pharmacynamoune.profile.ShoppingBasketActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,9 +68,17 @@ public class ProductListActivity extends AppCompatActivity implements ProductAda
             case android.R.id.home:
                 finish();
                 return true;
+            case R.id.action_shopping_basket:
+                shoppingBasketAction();
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void shoppingBasketAction() {
+        Intent intent = new Intent(this, ShoppingBasketActivity.class);
+        startActivity(intent);
     }
 
     private void setupToolbar() {
