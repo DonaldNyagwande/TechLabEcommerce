@@ -1,256 +1,322 @@
-package com.mobidal.pharmacynamoune;
+package com.mobidal.pharmacynamoune
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
-import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.viewpager2.widget.ViewPager2;
+import android.content.Intent
+import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
+import android.widget.Button
+import android.widget.ImageView
+import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.viewpager2.widget.ViewPager2
+import butterknife.BindView
+import butterknife.ButterKnife
+import com.facebook.shimmer.ShimmerFrameLayout
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
+import com.mobidal.pharmacynamoune.adapter.PictureAdapter
+import com.mobidal.pharmacynamoune.adapter.PictureAdapter.OnPictureClickListener
+import com.mobidal.pharmacynamoune.db.AppDatabase
+import com.mobidal.pharmacynamoune.db.AppDatabase.Companion.getInstance
+import com.mobidal.pharmacynamoune.db.entity.RecentlyViewedEntity
+import com.mobidal.pharmacynamoune.db.entity.SavedProductEntity
+import com.mobidal.pharmacynamoune.db.entity.ShoppingBasketEntity
+import com.mobidal.pharmacynamoune.model.Picture
+import com.mobidal.pharmacynamoune.model.Product
+import com.mobidal.pharmacynamoune.model.Product.Pivot
+import com.mobidal.pharmacynamoune.profile.ShoppingBasketActivity
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
+class ProductActivity : AppCompatActivity(), OnPictureClickListener {
+    @JvmField
+    @BindView(R.id.tb_main)
+    var mToolbar: Toolbar? = null
 
-import com.facebook.shimmer.ShimmerFrameLayout;
-import com.google.android.material.tabs.TabLayout;
-import com.google.android.material.tabs.TabLayoutMediator;
-import com.mobidal.pharmacynamoune.adapter.PictureAdapter;
-import com.mobidal.pharmacynamoune.model.Picture;
-import com.mobidal.pharmacynamoune.model.Product;
-import com.mobidal.pharmacynamoune.profile.ShoppingBasketActivity;
+    @JvmField
+    @BindView(R.id.l_main)
+    var mMainView: View? = null
 
-import java.util.ArrayList;
-import java.util.List;
+    @JvmField
+    @BindView(R.id.sfl)
+    var mShimmerFrameLayout: ShimmerFrameLayout? = null
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+    @JvmField
+    @BindView(R.id.vp2_picture)
+    var mPictureViewPager2: ViewPager2? = null
 
-public class ProductActivity extends AppCompatActivity implements PictureAdapter.OnPictureClickListener {
+    @JvmField
+    @BindView(R.id.tl_picture_indicator)
+    var mPictureIndicatorTabLayout: TabLayout? = null
 
-    public static final String EXTRA_PRODUCT_ID = "extra_product_id";
+    @JvmField
+    @BindView(R.id.tv_mark)
+    var mMarkTextView: TextView? = null
 
-    @BindView(R.id.tb_main) Toolbar mToolbar;
-    @BindView(R.id.l_main) View mMainView;
-    @BindView(R.id.sfl) ShimmerFrameLayout mShimmerFrameLayout;
+    @JvmField
+    @BindView(R.id.tv_name)
+    var mNameTextView: TextView? = null
 
-    @BindView(R.id.vp2_picture) ViewPager2 mPictureViewPager2;
-    @BindView(R.id.tl_picture_indicator) TabLayout mPictureIndicatorTabLayout;
+    @JvmField
+    @BindView(R.id.tv_price)
+    var mPriceTextView: TextView? = null
 
-    @BindView(R.id.tv_mark) TextView mMarkTextView;
-    @BindView(R.id.tv_name) TextView mNameTextView;
-    @BindView(R.id.tv_price) TextView mPriceTextView;
-    @BindView(R.id.tv_view_number) TextView mViewNumberTextView;
-    @BindView(R.id.iv_save) ImageView mSaveImageView;
-    @BindView(R.id.tv_description) TextView mDescriptionTextView;
+    @JvmField
+    @BindView(R.id.tv_view_number)
+    var mViewNumberTextView: TextView? = null
 
-    @BindView(R.id.b_purchase) Button mPurchaseButton;
+    @JvmField
+    @BindView(R.id.iv_save)
+    var mSaveImageView: ImageView? = null
 
-    Product mProduct;
-    PictureAdapter mPictureAdapter;
+    @JvmField
+    @BindView(R.id.tv_description)
+    var mDescriptionTextView: TextView? = null
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_product);
+    @JvmField
+    @BindView(R.id.b_purchase)
+    var mPurchaseButton: Button? = null
+    var mProduct: Product? = null
+    var mPictureAdapter: PictureAdapter? = null
+    private var mDb: AppDatabase? = null
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_product)
 
         // Bind HomeFragment views
-        ButterKnife.bind(this);
+        ButterKnife.bind(this)
+
+        // Initials AppDatabase
+        mDb = getInstance(this)
 
         // setup the {@link Toolbar}
-        setupToolbar();
+        setupToolbar()
 
         // setup {@link Product}
-        setupProduct();
+        setupProduct()
         // Load {@link Article}
-        loadProduct(getIntent());
+        loadProduct(intent)
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
-
-        return true;
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.main, menu)
+        return true
     }
 
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        int itemId = item.getItemId();
-
-        switch (itemId) {
-            case android.R.id.home:
-                finish();
-                return true;
-            case R.id.action_shopping_basket:
-                shoppingBasketAction();
-                return true;
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val itemId = item.itemId
+        when (itemId) {
+            android.R.id.home -> {
+                finish()
+                return true
+            }
+            R.id.action_shopping_basket -> {
+                shoppingBasketAction()
+                return true
+            }
         }
-
-        return super.onOptionsItemSelected(item);
+        return super.onOptionsItemSelected(item)
     }
 
-    private void shoppingBasketAction() {
-        Intent intent = new Intent(this, ShoppingBasketActivity.class);
-        startActivity(intent);
+    private fun shoppingBasketAction() {
+        val intent = Intent(this, ShoppingBasketActivity::class.java)
+        startActivity(intent)
     }
 
-    private void setupToolbar() {
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setTitle("Product Details");
+    private fun setupToolbar() {
+        setSupportActionBar(mToolbar)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        supportActionBar!!.setDisplayShowHomeEnabled(true)
+        supportActionBar!!.title = "Product Details"
     }
 
-    private void setupProduct() {
+    private fun setupProduct() {
         // Start Shimmer
-        startShimmer();
+        startShimmer()
 
         // Setup {@link Picture} horizontal {@link RecyclerView}
-        setupPictureView();
+        setupPictureView()
 
         // Setup purchase {@link Product}
-        setupPurchaseProduct();
+        setupPurchaseProduct()
 
         // Setup save {@link Product}
-        setupSaveProduct();
+        setupSaveProduct()
     }
 
-    private void startShimmer() {
-        mMainView.setVisibility(View.GONE);
-        mShimmerFrameLayout.setVisibility(View.VISIBLE);
-        mShimmerFrameLayout.startShimmer();
+    private fun startShimmer() {
+        mMainView!!.visibility = View.GONE
+        mShimmerFrameLayout!!.visibility = View.VISIBLE
+        mShimmerFrameLayout!!.startShimmer()
     }
 
-    private void setupPictureView() {
+    private fun setupPictureView() {
         // Create {@link LinearLayoutManager} for the {@link Picture} {@link RecyclerView}
-        LinearLayoutManager topArticleLayoutManager = new LinearLayoutManager(this,
-                LinearLayoutManager.HORIZONTAL, false);
+        val topArticleLayoutManager = LinearLayoutManager(this,
+            LinearLayoutManager.HORIZONTAL, false)
 
         // Create {@link PictureAdapter}
-        mPictureAdapter =
-                new PictureAdapter(this, null, this);
+        mPictureAdapter = PictureAdapter(this, null, this)
 
         // Setup {@link Picture} {@link RecyclerView} {@link Adapter}
-        mPictureViewPager2.setAdapter(mPictureAdapter);
+        mPictureViewPager2!!.adapter = mPictureAdapter
 
         // Setup {@link TabLayout} with {@link ViewPager2}
-        new TabLayoutMediator(mPictureIndicatorTabLayout, mPictureViewPager2, new TabLayoutMediator.TabConfigurationStrategy() {
-            @Override
-            public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
-                // This method do nothing
-            }
-        }).attach();
-
-        ViewPager2.PageTransformer transformer = new ViewPager2.PageTransformer() {
-            @Override
-            public void transformPage(@NonNull View page, float position) {
-                float r = 1 - Math.abs(position);
-                page.setAlpha(0.25f + r);
-                page.setScaleY(0.75f + r * 0.25f);
-            }
-        };
-
-        mPictureViewPager2.setPageTransformer(transformer);
+        TabLayoutMediator(mPictureIndicatorTabLayout!!, mPictureViewPager2!!) { tab, position ->
+            // This method do nothing
+        }.attach()
+        val transformer = ViewPager2.PageTransformer { page, position ->
+            val r = 1 - Math.abs(position)
+            page.alpha = 0.25f + r
+            page.scaleY = 0.75f + r * 0.25f
+        }
+        mPictureViewPager2!!.setPageTransformer(transformer)
     }
 
-    private void setupPurchaseProduct() {
+    private fun setupPurchaseProduct() {
         // TODO purchase product
-        mPurchaseButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mPurchaseButton.setEnabled(false);
-                String stateMessage = getString(R.string.your_purchase_has_been_successfully_completed);
-
-                Toast.makeText(ProductActivity.this, stateMessage,
-                        Toast.LENGTH_SHORT).show();
-
-                mPurchaseButton.setEnabled(true);
-            }
-        });
-    }
-
-    private void setupSaveProduct() {
-        // TODO save/unsave product
-        mSaveImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mSaveImageView.setEnabled(false);
-                String stateMessage = "";
-
-                if (mProduct.getPivot().isSaved()) {
-                    // Unsave product
-                    mSaveImageView.setImageResource(R.drawable.ic_favorite_border);
-                    stateMessage = getString(R.string.product_saved);
-                } else {
-                    // Save product
-                    mSaveImageView.setImageResource(R.drawable.ic_favorite);
-                    stateMessage = getString(R.string.product_unsaved);
-                }
-
-                Toast.makeText(ProductActivity.this, stateMessage,
-                        Toast.LENGTH_SHORT).show();
-
-                mSaveImageView.setEnabled(true);
-            }
-        });
-    }
-
-    private void loadProduct(Intent intent) {
-        // TODO load product
-        if (intent != null && intent.hasExtra(EXTRA_PRODUCT_ID)) {
-            int productId = intent.getIntExtra(EXTRA_PRODUCT_ID, 0);
-
-            List<Picture> pictureList = new ArrayList<>();
-
-            Picture picture = new Picture(1,
-                    "https://www.pharma-medicaments.com/wp-content/uploads/2022/01/3304746.jpg");
-
-            pictureList.add(picture);
-            pictureList.add(picture);
-            pictureList.add(picture);
-            pictureList.add(picture);
-            pictureList.add(picture);
-
-            Product.Pivot pivot = new Product.Pivot(false, 1);
-
-            mProduct = new Product(1, "Doliprane", "Doliprane 1000mg",
-                    "DOLIPRANE est un antalgique (calme la douleur) et un antipyrétique (fait baisser la fièvre).\n" +
-                            "\n" +
-                            "La substance active de ce médicament est le paracétamol.\n" +
-                            "\n" +
-                            "Il est utilisé pour traiter la douleur et/ou la fièvre, par exemple en cas de maux de tête, d’état grippal, de douleurs dentaires, de courbatures, de règles douloureuses.", 300,
-                    "https://www.pharma-medicaments.com/wp-content/uploads/2022/01/3304746.jpg",
-                    pictureList, 120, pivot);
-
-            if (mProduct.getPivot().isSaved()) {
-                mSaveImageView.setImageResource(R.drawable.ic_favorite);
-            } else {
-                mSaveImageView.setImageResource(R.drawable.ic_favorite_border);
-            }
-
-            mPictureAdapter.setList(mProduct.getPictureList());
-            mMarkTextView.setText(mProduct.getMark());
-            mNameTextView.setText(mProduct.getName());
-            mPriceTextView.setText(getString(R.string.price, mProduct.getPrice()));
-            mViewNumberTextView.setText(getString(R.string.views_number, mProduct.getViewNumber()));
-            mDescriptionTextView.setText(mProduct.getDescription());
-
-            mShimmerFrameLayout.stopShimmer();
-            mShimmerFrameLayout.setVisibility(View.GONE);
-            mMainView.setVisibility(View.VISIBLE);
+        mPurchaseButton!!.setOnClickListener {
+            mPurchaseButton!!.isEnabled = false
+            val userId = getSharedPreferences("user", MODE_PRIVATE).getLong("user_id", 0)
+            val shoppingBasketEntity = ShoppingBasketEntity()
+            shoppingBasketEntity.userId = userId
+            shoppingBasketEntity.productId = mProduct!!.id.toLong()
+            shoppingBasketEntity.quantity = 1L
+            mDb!!.shoppingBasketDao()!!.insert(shoppingBasketEntity)
+            val stateMessage = getString(R.string.your_purchase_has_been_successfully_completed)
+            Toast.makeText(this@ProductActivity, stateMessage,
+                Toast.LENGTH_SHORT).show()
+            mPurchaseButton!!.isEnabled = true
         }
     }
 
-    @Override
-    public void onPictureClicked(Picture picture) {
+    //    private void setupSaveProduct() {
+    //        mSaveImageView.setOnClickListener(new View.OnClickListener() {
+    //            @Override
+    //            public void onClick(View view) {
+    //                mSaveImageView.setEnabled(false);
+    //                String stateMessage = "";
+    //
+    //                if (mProduct.getPivot().isSaved()) {
+    //                    // Unsave product
+    //                    mProduct.getPivot().setSaved(false);
+    //                    mSaveImageView.setImageResource(R.drawable.ic_favorite_border);
+    //                    stateMessage = getString(R.string.product_saved);
+    //
+    //                    Long userId =
+    //                            getSharedPreferences("user", Context.MODE_PRIVATE)
+    //                                    .getLong("user_id", 0);
+    //
+    //                    SavedProductEntity savedProductEntity =
+    //                            mDb.savedProductDao()
+    //                                    .findByUserIdAndProductId(userId, (long) mProduct.getId());
+    //
+    //                    if (savedProductEntity != null) {
+    //                        mDb.savedProductDao().delete(savedProductEntity);
+    //                    }
+    //                } else {
+    //                    // Save product
+    //                    mProduct.getPivot().setSaved(true);
+    //                    mSaveImageView.setImageResource(R.drawable.ic_favorite);
+    //                    stateMessage = getString(R.string.product_unsaved);
+    //
+    //                    Long userId =
+    //                            getSharedPreferences("user", Context.MODE_PRIVATE)
+    //                                    .getLong("user_id", 0);
+    //
+    //                    SavedProductEntity savedProductEntity = new SavedProductEntity();
+    //                    savedProductEntity.setUserId(userId.intValue());
+    //                    savedProductEntity.setProductId(mProduct.getId());
+    //
+    //                    mDb.savedProductDao().insert(savedProductEntity);
+    //
+    //                }
+    //
+    //                Toast.makeText(ProductActivity.this, stateMessage,
+    //                        Toast.LENGTH_SHORT).show();
+    //
+    //                mSaveImageView.setEnabled(true);
+    //            }
+    //        });
+    //    }
+    private fun setupSaveProduct() {
+        // TODO save/unsave product
+        mSaveImageView!!.setOnClickListener {
+            mSaveImageView!!.isEnabled = false
+            val stateMessage = ""
+            if (mProduct!!.pivot!!.isSaved) {
+                // Unsave product
+                mProduct!!.pivot!!.isSaved = false
+                mSaveImageView!!.setImageResource(R.drawable.ic_favorite_border)
+                val userId = getSharedPreferences("user", MODE_PRIVATE)
+                    .getLong("user_id", 0)
+                val savedProductEntity = mDb!!.savedProductDao()
+                    ?.findByUserIdAndProductId(userId, mProduct!!.id.toLong())
+                mDb!!.savedProductDao()!!.delete(savedProductEntity)
+            } else {
+                // Save product
+                mProduct!!.pivot!!.isSaved = true
+                mSaveImageView!!.setImageResource(R.drawable.ic_favorite)
+                // Save product
+                mProduct!!.pivot!!.isSaved = true
+                mSaveImageView!!.setImageResource(R.drawable.ic_favorite)
+                val userId = getSharedPreferences("user", MODE_PRIVATE)
+                    .getLong("user_id", 0)
+                val savedProductEntity = SavedProductEntity()
+                savedProductEntity.userId = userId.toInt()
+                savedProductEntity.productId = mProduct!!.id
+                mDb!!.savedProductDao()!!.insert(savedProductEntity)
+            }
+            mSaveImageView!!.isEnabled = true
+        }
+    }
 
+    private fun loadProduct(intent: Intent?) {
+        // TODO load product
+        if (intent != null && intent.hasExtra(EXTRA_PRODUCT_ID)) {
+            val productId = intent.getLongExtra(EXTRA_PRODUCT_ID, 0)
+            val userId = getSharedPreferences("user", MODE_PRIVATE)
+                .getLong("user_id", 0)
+            val savedProductEntity = mDb!!.savedProductDao()
+                ?.findByUserIdAndProductId(userId, productId)
+            val productEntity = mDb!!.productDao()!!.find(productId)
+            val pictureEntities = mDb!!.pictureDao()!!.findAllByProductId(productId)
+            val pictureList: MutableList<Picture> = ArrayList()
+            for (pictureEntity in pictureEntities!!) {
+                pictureList.add(Picture(pictureEntity!!.id!!.toInt(), pictureEntity.pictureUrl!!))
+            }
+            val pivot: Pivot
+            pivot = if (savedProductEntity != null) Pivot(true, 1) else Pivot(false, 1)
+            mProduct = Product(productEntity!!.id, productEntity.mark!!,
+                productEntity.name!!, productEntity.description!!,
+                productEntity.price, productEntity.pictureUrl!!,
+                pictureList, 120, pivot)
+            if (mProduct!!.pivot!!.isSaved) {
+                mSaveImageView!!.setImageResource(R.drawable.ic_favorite)
+            } else {
+                mSaveImageView!!.setImageResource(R.drawable.ic_favorite_border)
+            }
+            mPictureAdapter!!.setList(mProduct!!.pictureList)
+            mMarkTextView!!.text = mProduct!!.mark
+            mNameTextView!!.text = mProduct!!.name
+            mPriceTextView!!.text = getString(R.string.price, mProduct!!.price)
+            mViewNumberTextView!!.text = getString(R.string.views_number, mProduct!!.viewNumber)
+            mDescriptionTextView!!.text = mProduct!!.description
+            mShimmerFrameLayout!!.stopShimmer()
+            mShimmerFrameLayout!!.visibility = View.GONE
+            mMainView!!.visibility = View.VISIBLE
+            val recentlyViewedEntity = RecentlyViewedEntity()
+            recentlyViewedEntity.userId = userId.toInt()
+            recentlyViewedEntity.productId = mProduct!!.id
+            mDb!!.recentlyViewedDao()!!.insert(recentlyViewedEntity)
+        }
+    }
+
+    override fun onPictureClicked(picture: Picture?) {}
+
+    companion object {
+        const val EXTRA_PRODUCT_ID = "extra_product_id"
     }
 }

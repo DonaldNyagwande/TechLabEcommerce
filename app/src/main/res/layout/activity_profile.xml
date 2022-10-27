@@ -246,6 +246,7 @@
             android:padding="16dp"
             android:background="@color/secondaryBackgroundColor"
             android:gravity="center"
+            android:visibility="gone"
             app:layout_constraintTop_toBottomOf="@id/ll_details"
             app:layout_constraintEnd_toStartOf="@+id/gl_v_end"
             app:layout_constraintStart_toStartOf="@+id/gl_v_begin">
@@ -276,6 +277,7 @@
             android:background="@color/secondaryBackgroundColor"
             android:gravity="center"
             android:padding="16dp"
+            android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@id/gl_h_end"
             app:layout_constraintEnd_toStartOf="@+id/gl_v_end"
             app:layout_constraintStart_toStartOf="@+id/gl_v_begin"

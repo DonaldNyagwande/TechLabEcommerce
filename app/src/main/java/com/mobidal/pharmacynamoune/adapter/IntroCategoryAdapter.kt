@@ -1,207 +1,179 @@
-package com.mobidal.pharmacynamoune.adapter;
+package com.mobidal.pharmacynamoune.adapter
 
-import android.content.Context;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
+import android.content.Context
+import com.mobidal.pharmacynamoune.model.IntroCategory
+import com.mobidal.pharmacynamoune.adapter.IntroCategoryAdapter.OnViewAllClickListener
+import com.mobidal.pharmacynamoune.adapter.ProductAdapter.OnProductClickListener
+import androidx.recyclerview.widget.RecyclerView
+import android.view.ViewGroup
+import com.mobidal.pharmacynamoune.R
+import android.view.LayoutInflater
+import android.view.View
+import com.mobidal.pharmacynamoune.adapter.IntroCategoryAdapter.IntroSecondaryCategoryViewHolder
+import com.mobidal.pharmacynamoune.adapter.IntroCategoryAdapter
+import butterknife.BindView
+import android.widget.TextView
+import com.mobidal.pharmacynamoune.adapter.ProductAdapter
+import butterknife.ButterKnife
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.DividerItemDecoration
+import com.mobidal.pharmacynamoune.model.Product
+import com.facebook.shimmer.ShimmerFrameLayout
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.facebook.shimmer.ShimmerFrameLayout;
-import com.mobidal.pharmacynamoune.R;
-import com.mobidal.pharmacynamoune.model.IntroCategory;
-import com.mobidal.pharmacynamoune.model.Product;
-
-import java.util.List;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
-public class IntroCategoryAdapter extends RecyclerView
-        .Adapter<RecyclerView.ViewHolder> {
-
-    private Context mContext;
-    private List<IntroCategory> mIntroCategoryList;
-    private OnViewAllClickListener mOnViewAllClickListener;
-    private ProductAdapter.OnProductClickListener mOnProductClickListener;
-
-    private boolean mIsLoading = true;
-    private static final int SHIMMER_ITEM_COUNT = 2;
-
-    public IntroCategoryAdapter(Context mContext,
-                                List<IntroCategory> mIntroCategoryList,
-                                OnViewAllClickListener mOnViewAllClickListener,
-                                ProductAdapter.OnProductClickListener mOnProductClickListener) {
-        this.mContext = mContext;
-        this.mIntroCategoryList = mIntroCategoryList;
-        this.mOnViewAllClickListener = mOnViewAllClickListener;
-        this.mOnProductClickListener = mOnProductClickListener;
-    }
-
-    @NonNull
-    @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        int layoutId = R.layout.item_placeholder_intro_category;
-
+class IntroCategoryAdapter(
+    private val mContext: Context,
+    private var mIntroCategoryList: List<IntroCategory>?,
+    private val mOnViewAllClickListener: OnViewAllClickListener?,
+    private val mOnProductClickListener: OnProductClickListener?
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    private var mIsLoading = true
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        var layoutId = R.layout.item_placeholder_intro_category
         if (!mIsLoading) {
-            layoutId = R.layout.item_intro_category;
+            layoutId = R.layout.item_intro_category
         }
-
-        View itemView = LayoutInflater.from(mContext)
-                .inflate(layoutId, parent, false);
-
-        if (mIsLoading) {
-            return new ShimmerViewHolder(itemView);
+        val itemView = LayoutInflater.from(mContext)
+            .inflate(layoutId, parent, false)
+        return if (mIsLoading) {
+            ShimmerViewHolder(itemView)
         } else {
-            return new IntroSecondaryCategoryViewHolder(itemView);
+            IntroSecondaryCategoryViewHolder(itemView)
         }
-
     }
 
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (mIsLoading) {
-            ShimmerViewHolder viewHolder = (ShimmerViewHolder) holder;
-            viewHolder.startShimmer();
+            val viewHolder = holder as ShimmerViewHolder
+            viewHolder.startShimmer()
         } else {
-            IntroSecondaryCategoryViewHolder viewHolder = (IntroSecondaryCategoryViewHolder) holder;
-            viewHolder.bind(mIntroCategoryList.get(position));
+            val viewHolder = holder as IntroSecondaryCategoryViewHolder
+            viewHolder.bind(mIntroCategoryList!![position])
         }
     }
 
-    @Override
-    public int getItemCount() {
-        if (mIsLoading) {
-            return SHIMMER_ITEM_COUNT;
+    override fun getItemCount(): Int {
+        return if (mIsLoading) {
+            SHIMMER_ITEM_COUNT
         } else {
-            return mIntroCategoryList == null ? 0 : mIntroCategoryList.size();
+            if (mIntroCategoryList == null) 0 else mIntroCategoryList!!.size
         }
     }
 
-    public void setList(List<IntroCategory> list) {
-        mIntroCategoryList = list;
-        notifyDataSetChanged();
+    fun setList(list: List<IntroCategory>?) {
+        mIntroCategoryList = list
+        notifyDataSetChanged()
     }
 
-    public void setLoading(boolean isLoading) {
-        mIsLoading = isLoading;
+    fun setLoading(isLoading: Boolean) {
+        mIsLoading = isLoading
     }
 
-    class IntroSecondaryCategoryViewHolder extends RecyclerView.ViewHolder
-            implements ProductAdapter.OnProductClickListener, View.OnClickListener {
+    internal inner class IntroSecondaryCategoryViewHolder(itemView: View) :
+        RecyclerView.ViewHolder(itemView), OnProductClickListener, View.OnClickListener {
+        @JvmField
+        @BindView(R.id.tv_name)
+        var mNameTextView: TextView? = null
 
-        @BindView(R.id.tv_name) TextView mNameTextView;
-        @BindView(R.id.tv_offer_text) TextView mOfferTextView;
-        @BindView(R.id.tv_view_all) View mViewAllView;
-        @BindView(R.id.rv_product) RecyclerView mProductRecyclerView;
+        @JvmField
+        @BindView(R.id.tv_offer_text)
+        var mOfferTextView: TextView? = null
 
-        ProductAdapter mProductAdapter;
+        @JvmField
+        @BindView(R.id.tv_view_all)
+        var mViewAllView: View? = null
 
-        public IntroSecondaryCategoryViewHolder(@NonNull View itemView) {
-            super(itemView);
+        @JvmField
+        @BindView(R.id.rv_product)
+        var mProductRecyclerView: RecyclerView? = null
+        var mProductAdapter: ProductAdapter? = null
+
+        init {
 
             // Bind views
-            ButterKnife.bind(this, itemView);
+            ButterKnife.bind(this, itemView)
 
             // Setup {@Article} list
-            setupProductList();
+            setupProductList()
         }
 
-        private void setupProductList() {
-            GridLayoutManager gridLayoutManager =
-                    new GridLayoutManager(mContext, 2);
-            mProductAdapter =
-                    new ProductAdapter(mContext, null, ProductAdapter.TYPE_ONE);
-
-            mProductAdapter.setOnProductClickListener(this);
-            mProductAdapter.setLoading(false);
-
-            mProductRecyclerView.setLayoutManager(gridLayoutManager);
-            mProductRecyclerView.setAdapter(mProductAdapter);
-            mProductRecyclerView.addItemDecoration(
-                    new DividerItemDecoration(mContext, DividerItemDecoration.HORIZONTAL));
-            mProductRecyclerView.addItemDecoration(
-                    new DividerItemDecoration(mContext, DividerItemDecoration.VERTICAL));
+        private fun setupProductList() {
+            val gridLayoutManager = GridLayoutManager(mContext, 2)
+            mProductAdapter = ProductAdapter(mContext, null, ProductAdapter.TYPE_ONE)
+            mProductAdapter!!.setOnProductClickListener(this)
+            mProductAdapter!!.setLoading(false)
+            mProductRecyclerView!!.layoutManager = gridLayoutManager
+            mProductRecyclerView!!.adapter = mProductAdapter
+            mProductRecyclerView!!.addItemDecoration(
+                DividerItemDecoration(mContext, DividerItemDecoration.HORIZONTAL))
+            mProductRecyclerView!!.addItemDecoration(
+                DividerItemDecoration(mContext, DividerItemDecoration.VERTICAL))
         }
 
-        public void bind(IntroCategory introCategory) {
-            List<Product> productList = introCategory.getProductList();
-
-            mProductAdapter.setAll(productList);
-
-            mNameTextView.setText(introCategory.getName());
-            mOfferTextView.setText(introCategory.getOfferText());
-
-            mViewAllView.setOnClickListener(this);
+        fun bind(introCategory: IntroCategory) {
+            val productList = introCategory.productList
+            mProductAdapter!!.setAll(productList)
+            mNameTextView!!.text = introCategory.name
+            mOfferTextView!!.text = introCategory.offerText
+            mViewAllView!!.setOnClickListener(this)
         }
 
-        @Override
-        public void onProductClicked(Product product) {
-            if (mOnProductClickListener != null) {
-                mOnProductClickListener.onProductClicked(product);
-            }
+        override fun onProductClicked(product: Product) {
+            mOnProductClickListener?.onProductClicked(product)
         }
 
-        @Override
-        public void onClick(View v) {
-            if (mOnViewAllClickListener != null) {
-                mOnViewAllClickListener.onViewAllClicked(
-                        mIntroCategoryList
-                                .get(getAdapterPosition()));
-            }
+        override fun onClick(v: View) {
+            mOnViewAllClickListener?.onViewAllClicked(
+                mIntroCategoryList?.get(adapterPosition))
         }
     }
 
-    class ShimmerViewHolder extends RecyclerView.ViewHolder {
-
+    internal inner class ShimmerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        @JvmField
         @BindView(R.id.sfl_category)
-        ShimmerFrameLayout mCategoryShimmerFrameLayout;
-        @BindView(R.id.rv_product) RecyclerView mArticleRecyclerView;
+        var mCategoryShimmerFrameLayout: ShimmerFrameLayout? = null
 
-        ProductAdapter mProductAdapter;
+        @JvmField
+        @BindView(R.id.rv_product)
+        var mArticleRecyclerView: RecyclerView? = null
+        var mProductAdapter: ProductAdapter? = null
 
-        public ShimmerViewHolder(@NonNull View itemView) {
-            super(itemView);
+        init {
 
             // Bind views
-            ButterKnife.bind(this, itemView);
+            ButterKnife.bind(this, itemView)
 
             // Setup {@Article} list
-            setupProductList();
+            setupProductList()
         }
 
-        private void setupProductList() {
-            GridLayoutManager gridLayoutManager =
-                    new GridLayoutManager(mContext, 2);
-            mProductAdapter =
-                    new ProductAdapter(mContext, null, ProductAdapter.TYPE_ONE);
-
-            mArticleRecyclerView.setLayoutManager(gridLayoutManager);
-            mArticleRecyclerView.setAdapter(mProductAdapter);
-            mArticleRecyclerView.addItemDecoration(
-                    new DividerItemDecoration(mContext, DividerItemDecoration.HORIZONTAL));
-            mArticleRecyclerView.addItemDecoration(
-                    new DividerItemDecoration(mContext, DividerItemDecoration.VERTICAL));
+        private fun setupProductList() {
+            val gridLayoutManager = GridLayoutManager(mContext, 2)
+            mProductAdapter = ProductAdapter(mContext, null, ProductAdapter.TYPE_ONE)
+            mArticleRecyclerView!!.layoutManager = gridLayoutManager
+            mArticleRecyclerView!!.adapter = mProductAdapter
+            mArticleRecyclerView!!.addItemDecoration(
+                DividerItemDecoration(mContext, DividerItemDecoration.HORIZONTAL))
+            mArticleRecyclerView!!.addItemDecoration(
+                DividerItemDecoration(mContext, DividerItemDecoration.VERTICAL))
         }
 
-        public void startShimmer() {
+        fun startShimmer() {
             // Start shimmer
-            mCategoryShimmerFrameLayout.startShimmer();
+            mCategoryShimmerFrameLayout!!.startShimmer()
         }
 
-        public void stopShimmer() {
+        fun stopShimmer() {
             // Stop shimmer
-            mCategoryShimmerFrameLayout.stopShimmer();
-            mCategoryShimmerFrameLayout.setShimmer(null);
+            mCategoryShimmerFrameLayout!!.stopShimmer()
+            mCategoryShimmerFrameLayout!!.setShimmer(null)
         }
     }
 
-
-    public interface OnViewAllClickListener {
-        void onViewAllClicked(IntroCategory category);
+    interface OnViewAllClickListener {
+        fun onViewAllClicked(category: IntroCategory?)
     }
 
+    companion object {
+        private const val SHIMMER_ITEM_COUNT = 2
+    }
 }

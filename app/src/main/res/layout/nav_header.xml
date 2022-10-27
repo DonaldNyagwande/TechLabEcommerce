@@ -61,7 +61,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:text="2,500 DA"
+        android:text=""
         app:layout_constraintBottom_toBottomOf="@id/cv_picture"
         app:layout_constraintEnd_toStartOf="@+id/gl_v_end"
         app:layout_constraintStart_toEndOf="@id/cv_picture" />
@@ -115,7 +115,7 @@
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_marginTop="16dp"
-        android:src="@drawable/ic_location"
+        android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@id/iv_email"
         app:layout_constraintBottom_toTopOf="@id/gl_h_end"
         app:layout_constraintStart_toStartOf="@id/iv_phone" />
@@ -127,11 +127,11 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@id/iv_location"
         app:layout_constraintEnd_toStartOf="@+id/gl_v_end"
         app:layout_constraintStart_toEndOf="@id/iv_location"
-        app:layout_constraintTop_toTopOf="@id/iv_location"
-        android:text="Mila - Teleghma" />
+        app:layout_constraintTop_toTopOf="@id/iv_location" />
 
     <Button
         android:id="@+id/b_connect"
@@ -149,7 +149,7 @@
         android:id="@+id/g_profile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"
+        android:visibility="visible"
         app:constraint_referenced_ids="cv_picture, tv_name, tv_score, iv_phone, tv_phone, iv_email, tv_email, iv_location, tv_location"/>
 
     <androidx.constraintlayout.widget.Barrier

@@ -1,159 +1,153 @@
-package com.mobidal.pharmacynamoune.profile;
+package com.mobidal.pharmacynamoune.profile
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
-import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import android.content.Intent
+import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import butterknife.BindView
+import butterknife.ButterKnife
+import com.mobidal.pharmacynamoune.ProductActivity
+import com.mobidal.pharmacynamoune.R
+import com.mobidal.pharmacynamoune.adapter.ProductAdapter
+import com.mobidal.pharmacynamoune.adapter.ProductAdapter.OnProduct2ClickListener
+import com.mobidal.pharmacynamoune.db.AppDatabase
+import com.mobidal.pharmacynamoune.db.AppDatabase.Companion.getInstance
+import com.mobidal.pharmacynamoune.db.entity.ShoppingBasketEntity
+import com.mobidal.pharmacynamoune.helper.GridSpacingItemDecoration
+import com.mobidal.pharmacynamoune.model.Product
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.Toast;
+class FavoriteActivity : AppCompatActivity(), OnProduct2ClickListener {
+    @JvmField
+    @BindView(R.id.tb_main)
+    var mToolbar: Toolbar? = null
 
-import com.mobidal.pharmacynamoune.ProductActivity;
-import com.mobidal.pharmacynamoune.R;
-import com.mobidal.pharmacynamoune.adapter.ProductAdapter;
-import com.mobidal.pharmacynamoune.helper.GridSpacingItemDecoration;
-import com.mobidal.pharmacynamoune.model.Product;
+    @JvmField
+    @BindView(R.id.v_main)
+    var mMainView: View? = null
 
-import java.util.ArrayList;
-import java.util.List;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
-public class FavoriteActivity extends AppCompatActivity implements ProductAdapter.OnProduct2ClickListener {
-
-    @BindView(R.id.tb_main) Toolbar mToolbar;
-    @BindView(R.id.v_main) View mMainView;
-
-    @BindView(R.id.rv_product) RecyclerView mProductRecyclerView;
-
-    ProductAdapter mProductAdapter;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_favorite);
+    @JvmField
+    @BindView(R.id.rv_product)
+    var mProductRecyclerView: RecyclerView? = null
+    var mProductAdapter: ProductAdapter? = null
+    private var mDb: AppDatabase? = null
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_favorite)
 
         // Bind Views
-        ButterKnife.bind(this);
+        ButterKnife.bind(this)
+
+        // Initials AppDatabase
+        mDb = getInstance(applicationContext)
 
         // setup the {@link Toolbar}
-        setupToolbar();
+        setupToolbar()
 
         // setup {@Article} list
-        setupProductList();
+        setupProductList()
         // Load {@Article} list
-        loadProductList();
+        loadProductList()
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
-
-        return true;
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.main, menu)
+        return true
     }
 
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        int itemId = item.getItemId();
-
-        switch (itemId) {
-            case android.R.id.home:
-                finish();
-                return true;
-            case R.id.action_shopping_basket:
-                shoppingBasketAction();
-                return true;
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val itemId = item.itemId
+        when (itemId) {
+            android.R.id.home -> {
+                finish()
+                return true
+            }
+            R.id.action_shopping_basket -> {
+                shoppingBasketAction()
+                return true
+            }
         }
-
-        return super.onOptionsItemSelected(item);
+        return super.onOptionsItemSelected(item)
     }
 
-    private void shoppingBasketAction() {
-        Intent intent = new Intent(this, ShoppingBasketActivity.class);
-        startActivity(intent);
+    private fun shoppingBasketAction() {
+        val intent = Intent(this, ShoppingBasketActivity::class.java)
+        startActivity(intent)
     }
 
-    private void setupProductList() {
-        GridLayoutManager gridLayoutManager =
-                new GridLayoutManager(this, 1);
+    private fun setupProductList() {
+        val gridLayoutManager = GridLayoutManager(this, 1)
 
         // Create {@link RecyclerView.ItemDecoration}
-        int spacingInPixel =
-                getResources().getDimensionPixelSize(R.dimen.grid_product_spacing);
-        GridSpacingItemDecoration gridSpacingItemDecoration =
-                new GridSpacingItemDecoration(1, spacingInPixel, false);
-
-        mProductAdapter =
-                new ProductAdapter(this, null, ProductAdapter.TYPE_TWO);
-
-        mProductAdapter.setOnProduct2ClickListener(this);
-
-        mProductRecyclerView.setLayoutManager(gridLayoutManager);
-        mProductRecyclerView.setAdapter(mProductAdapter);
-        mProductRecyclerView.addItemDecoration(gridSpacingItemDecoration);
+        val spacingInPixel = resources.getDimensionPixelSize(R.dimen.grid_product_spacing)
+        val gridSpacingItemDecoration = GridSpacingItemDecoration(1, spacingInPixel, false)
+        mProductAdapter = ProductAdapter(this, null, ProductAdapter.TYPE_TWO)
+        mProductAdapter!!.setOnProduct2ClickListener(this)
+        mProductRecyclerView!!.layoutManager = gridLayoutManager
+        mProductRecyclerView!!.adapter = mProductAdapter
+        mProductRecyclerView!!.addItemDecoration(gridSpacingItemDecoration)
     }
 
-    private void loadProductList() {
+    private fun loadProductList() {
         // TODO load product list
-        Product product =
-                new Product(1, "Doliprane", "Doliprane 1000mg",
-                        "Douleurs et fievre", 300,
-                        "https://www.pharma-medicaments.com/wp-content/uploads/2022/01/3304746.jpg",
-                        null, 120, null);
-
-        List<Product> productList = new ArrayList<>();
-
-        productList.add(product);
-        productList.add(product);
-        productList.add(product);
-        productList.add(product);
-        productList.add(product);
-        productList.add(product);
-        productList.add(product);
-        productList.add(product);
-
-        mProductRecyclerView.setAdapter(null);
-
-        mProductAdapter.setLoading(false);
-        mProductAdapter.setAll(productList);
-
-        mProductRecyclerView.setAdapter(mProductAdapter);
-
+        val productList: MutableList<Product> = ArrayList()
+        val spList = mDb!!.savedProductDao()!!.findAll()
+        for (sp in spList!!) {
+            val pe = mDb!!.productDao()!!
+                .find(Integer.toUnsignedLong(sp!!.productId))
+            val prod = Product(pe!!.id,
+                pe.mark!!,
+                pe.name!!,
+                pe.description!!,
+                pe.price,
+                pe.pictureUrl!!,
+                null,
+                pe.viewNumber,
+                null)
+            productList.add(prod)
+        }
+        mProductRecyclerView!!.adapter = null
+        mProductAdapter!!.setLoading(false)
+        mProductAdapter!!.setAll(productList)
+        mProductRecyclerView!!.adapter = mProductAdapter
     }
 
-    private void setupToolbar() {
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setTitle(getString(R.string.favorite));
+    private fun setupToolbar() {
+        setSupportActionBar(mToolbar)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        supportActionBar!!.setDisplayShowHomeEnabled(true)
+        supportActionBar!!.title = getString(R.string.favorite)
     }
 
-    @Override
-    public void onProductClicked(Product product) {
-        Intent intent = new Intent(this, ProductActivity.class);
-
-        intent.putExtra(ProductActivity.EXTRA_PRODUCT_ID, product.getId());
-
-        startActivity(intent);
+    override fun onProductClicked(product: Product?) {
+        val intent = Intent(this, ProductActivity::class.java)
+        intent.putExtra(ProductActivity.EXTRA_PRODUCT_ID, product!!.id.toLong())
+        startActivity(intent)
     }
 
-    @Override
-    public void onDeleteClicked(Product product, int adapterPosition) {
-        mProductAdapter.remove(adapterPosition);
+    override fun onDeleteClicked(product: Product?, adapterPosition: Int) {
+        mProductAdapter!!.remove(adapterPosition)
+        val userId = getSharedPreferences("user", MODE_PRIVATE).getLong("user_id", 0)
+        val savedProductEntity = mDb!!.savedProductDao()!!
+            .findByUserIdAndProductId(userId, product!!.id.toLong())
+        mDb!!.savedProductDao()!!.delete(savedProductEntity)
         Toast.makeText(this,
-                getString(R.string.product_removed_from_favorite_list), Toast.LENGTH_SHORT).show();
+            getString(R.string.product_removed_from_favorite_list), Toast.LENGTH_SHORT).show()
     }
 
-    @Override
-    public void onPurchaseClicked(Product product) {
+    override fun onPurchaseClicked(product: Product?) {
+        val userId = getSharedPreferences("user", MODE_PRIVATE).getLong("user_id", 0)
+        val shoppingBasketEntity = ShoppingBasketEntity()
+        shoppingBasketEntity.userId = userId
+        shoppingBasketEntity.productId = product!!.id.toLong()
+        shoppingBasketEntity.quantity = 1L
+        mDb!!.shoppingBasketDao()!!.insert(shoppingBasketEntity)
         Toast.makeText(this,
-                getString(R.string.the_product_has_been_purchased), Toast.LENGTH_SHORT).show();
+            getString(R.string.the_product_has_been_purchased), Toast.LENGTH_SHORT).show()
     }
 }

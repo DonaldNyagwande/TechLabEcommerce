@@ -1,148 +1,143 @@
-package com.mobidal.pharmacynamoune.profile;
+package com.mobidal.pharmacynamoune.profile
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
+import android.content.Intent
+import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
+import android.widget.Button
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import butterknife.BindView
+import butterknife.ButterKnife
+import com.mobidal.pharmacynamoune.R
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
+class ProfileActivity : AppCompatActivity() {
+    @JvmField
+    @BindView(R.id.tb_main)
+    var mToolbar: Toolbar? = null
 
-import com.mobidal.pharmacynamoune.ProductActivity;
-import com.mobidal.pharmacynamoune.R;
+    @JvmField
+    @BindView(R.id.tv_welcome)
+    var mWelcomeTextView: TextView? = null
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
+    @JvmField
+    @BindView(R.id.tv_welcome_description)
+    var mWelcomeDescriptionTextView: TextView? = null
 
-public class ProfileActivity extends AppCompatActivity {
+    @JvmField
+    @BindView(R.id.b_connect)
+    var mConnectButton: Button? = null
 
-    @BindView(R.id.tb_main) Toolbar mToolbar;
+    @JvmField
+    @BindView(R.id.ll_my_commands)
+    var mMyCommandsView: View? = null
 
-    @BindView(R.id.tv_welcome) TextView mWelcomeTextView;
-    @BindView(R.id.tv_welcome_description) TextView mWelcomeDescriptionTextView;
-    @BindView(R.id.b_connect) Button mConnectButton;
+    @JvmField
+    @BindView(R.id.ll_saved_products)
+    var mSavedProductsView: View? = null
 
-    @BindView(R.id.ll_my_commands) View mMyCommandsView;
-    @BindView(R.id.ll_saved_products) View mSavedProductsView;
-    @BindView(R.id.ll_recently_viewed) View mRecentlyViewedView;
-    @BindView(R.id.ll_recently_searched) View mRecentSearchedView;
+    @JvmField
+    @BindView(R.id.ll_recently_viewed)
+    var mRecentlyViewedView: View? = null
 
-    @BindView(R.id.ll_details) View mDetailsView;
-    @BindView(R.id.ll_address_book) View mAddressBookView;
-    @BindView(R.id.ll_change_password) View mChangePasswordView;
+    @JvmField
+    @BindView(R.id.ll_recently_searched)
+    var mRecentSearchedView: View? = null
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile);
+    @JvmField
+    @BindView(R.id.ll_details)
+    var mDetailsView: View? = null
+
+    @JvmField
+    @BindView(R.id.ll_address_book)
+    var mAddressBookView: View? = null
+
+    @JvmField
+    @BindView(R.id.ll_change_password)
+    var mChangePasswordView: View? = null
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_profile)
 
         // Bind views
-        ButterKnife.bind(this);
+        ButterKnife.bind(this)
 
         // setup the {@link Toolbar}
-        setupToolbar();
+        setupToolbar()
 
         // Setup profile
-        setupProfile();
-    }
-
-    private void setupToolbar() {
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setTitle("Profile");
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
-
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        int itemId = item.getItemId();
-
-        switch (itemId) {
-            case android.R.id.home:
-                finish();
-                return true;
-            case R.id.action_shopping_basket:
-                shoppingBasketAction();
-                return true;
+        setupProfile()
+        val sp = getSharedPreferences("user", MODE_PRIVATE)
+        val userId = sp.getLong("user_id", 0)
+        if (userId > 0) {
+            mConnectButton!!.visibility = View.INVISIBLE
+            mWelcomeDescriptionTextView!!.text = sp.getString("username", "")
         }
-
-        return super.onOptionsItemSelected(item);
     }
 
-    private void shoppingBasketAction() {
-        Intent intent = new Intent(this, ShoppingBasketActivity.class);
-        startActivity(intent);
+    private fun setupToolbar() {
+        setSupportActionBar(mToolbar)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        supportActionBar!!.setDisplayShowHomeEnabled(true)
+        supportActionBar!!.title = "Profile"
     }
 
-    private void setupProfile() {
-        mConnectButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.main, menu)
+        return true
+    }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val itemId = item.itemId
+        when (itemId) {
+            android.R.id.home -> {
+                finish()
+                return true
             }
-        });
-
-        mMyCommandsView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
+            R.id.action_shopping_basket -> {
+                shoppingBasketAction()
+                return true
             }
-        });
+        }
+        return super.onOptionsItemSelected(item)
+    }
 
-        mSavedProductsView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(ProfileActivity.this, FavoriteActivity.class);
-                startActivity(intent);
-            }
-        });
+    private fun shoppingBasketAction() {
+        val intent = Intent(this, ShoppingBasketActivity::class.java)
+        startActivity(intent)
+    }
 
-        mRecentlyViewedView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent =
-                        new Intent(ProfileActivity.this, RecentlyViewedActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        mRecentSearchedView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
-
-        mDetailsView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
-
-        mAddressBookView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
-
-        mChangePasswordView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
+    private fun setupProfile() {
+        mConnectButton!!.setOnClickListener { }
+        mMyCommandsView!!.setOnClickListener {
+            val intent = Intent(this@ProfileActivity, CommandActivity::class.java)
+            startActivity(intent)
+        }
+        mSavedProductsView!!.setOnClickListener {
+            val intent = Intent(this@ProfileActivity, FavoriteActivity::class.java)
+            startActivity(intent)
+        }
+        mRecentlyViewedView!!.setOnClickListener {
+            val intent = Intent(this@ProfileActivity, RecentlyViewedActivity::class.java)
+            startActivity(intent)
+        }
+        mRecentSearchedView!!.setOnClickListener {
+            val intent = Intent(this@ProfileActivity, RecentSearchedActivity::class.java)
+            startActivity(intent)
+        }
+        mDetailsView!!.setOnClickListener {
+            val intent = Intent(this@ProfileActivity, AccountActivity::class.java)
+            startActivity(intent)
+        }
+        mAddressBookView!!.setOnClickListener {
+            val intent = Intent(this@ProfileActivity, AddressActivity::class.java)
+            startActivity(intent)
+        }
+        mChangePasswordView!!.setOnClickListener {
+            val intent = Intent(this@ProfileActivity, ChangePasswordActivity::class.java)
+            startActivity(intent)
+        }
     }
 }

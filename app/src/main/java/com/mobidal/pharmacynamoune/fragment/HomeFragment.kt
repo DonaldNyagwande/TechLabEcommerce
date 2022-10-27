@@ -1,192 +1,157 @@
-package com.mobidal.pharmacynamoune.fragment;
+package com.mobidal.pharmacynamoune.fragment
 
-import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.content.Context
+import android.content.Intent
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import butterknife.BindView
+import butterknife.ButterKnife
+import com.mobidal.pharmacynamoune.ProductActivity
+import com.mobidal.pharmacynamoune.ProductListActivity
+import com.mobidal.pharmacynamoune.R
+import com.mobidal.pharmacynamoune.adapter.IntroCategoryAdapter
+import com.mobidal.pharmacynamoune.adapter.IntroCategoryAdapter.OnViewAllClickListener
+import com.mobidal.pharmacynamoune.adapter.ProductAdapter.OnProductClickListener
+import com.mobidal.pharmacynamoune.adapter.SecondaryCategoryAdapter
+import com.mobidal.pharmacynamoune.adapter.SecondaryCategoryAdapter.OnSecondaryCategoryClickListener
+import com.mobidal.pharmacynamoune.db.AppDatabase
+import com.mobidal.pharmacynamoune.db.AppDatabase.Companion.getInstance
+import com.mobidal.pharmacynamoune.db.entity.ProductEntity
+import com.mobidal.pharmacynamoune.helper.GridSpacingItemDecoration
+import com.mobidal.pharmacynamoune.model.Category
+import com.mobidal.pharmacynamoune.model.IntroCategory
+import com.mobidal.pharmacynamoune.model.Product
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.mobidal.pharmacynamoune.ProductActivity;
-import com.mobidal.pharmacynamoune.ProductListActivity;
-import com.mobidal.pharmacynamoune.R;
-import com.mobidal.pharmacynamoune.adapter.IntroCategoryAdapter;
-import com.mobidal.pharmacynamoune.adapter.ProductAdapter;
-import com.mobidal.pharmacynamoune.adapter.SecondaryCategoryAdapter;
-import com.mobidal.pharmacynamoune.helper.GridSpacingItemDecoration;
-import com.mobidal.pharmacynamoune.model.Category;
-import com.mobidal.pharmacynamoune.model.IntroCategory;
-import com.mobidal.pharmacynamoune.model.Product;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
-public class HomeFragment extends Fragment implements SecondaryCategoryAdapter.OnSecondaryCategoryClickListener, ProductAdapter.OnProductClickListener, IntroCategoryAdapter.OnViewAllClickListener {
-
-    private Context mContext;
-
+class HomeFragment(private val mContext: Context) : Fragment(), OnSecondaryCategoryClickListener,
+    OnProductClickListener, OnViewAllClickListener {
     // Top Secondary Views
-    @BindView(R.id.rv_top_secondary_category) RecyclerView mTopCategoryRecyclerView;
-    @BindView(R.id.rv_intro_category) RecyclerView mIntroCategoryRecyclerView;
+    @JvmField
+    @BindView(R.id.rv_top_secondary_category)
+    var mTopCategoryRecyclerView: RecyclerView? = null
 
-    SecondaryCategoryAdapter mTopCategoryAdapter;
-    IntroCategoryAdapter mIntroCategoryAdapter;
-
-    public HomeFragment(Context mContext) {
-        this.mContext = mContext;
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = LayoutInflater.from(mContext)
-                .inflate(R.layout.fragment_home, container, false);
+    @JvmField
+    @BindView(R.id.rv_intro_category)
+    var mIntroCategoryRecyclerView: RecyclerView? = null
+    var mTopCategoryAdapter: SecondaryCategoryAdapter? = null
+    var mIntroCategoryAdapter: IntroCategoryAdapter? = null
+    private var mDb: AppDatabase? = null
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val rootView = LayoutInflater.from(mContext)
+            .inflate(R.layout.fragment_home, container, false)
 
         // Bind HomeFragment views
-        ButterKnife.bind(this, rootView);
+        ButterKnife.bind(this, rootView)
+
+        // Initials AppDatabase
+        mDb = getInstance(requireActivity())
 
         // Setup Top {@link SecondaryCategory} RecyclerView
-        setupTopCategory();
+        setupTopCategory()
         // Load Top SecondaryCategory list
-        loadTopCategoryList();
+        loadTopCategoryList()
 
         // Setup {@link IntroCategory} RecyclerView
-        setupIntroCategory();
+        setupIntroCategory()
         // Load {@link IntroCategory}
-        loadIntroCategoryList();
-
-        return rootView;
+        loadIntroCategoryList()
+        return rootView
     }
 
-    private void setupTopCategory() {
+    private fun setupTopCategory() {
         // Create {@link GridLayoutManager} for the {@link Category} {@link RecyclerView}
-        GridLayoutManager topSecondaryCategoryLayoutManager =
-                new GridLayoutManager(mContext, 2);
-        topSecondaryCategoryLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        val topSecondaryCategoryLayoutManager = GridLayoutManager(mContext, 2)
+        topSecondaryCategoryLayoutManager.orientation = LinearLayoutManager.VERTICAL
 
         // Create {@link SecondaryCategoryAdapter}
-        mTopCategoryAdapter = new SecondaryCategoryAdapter(mContext,
-                null,this);
+        mTopCategoryAdapter = SecondaryCategoryAdapter(mContext,
+            null, this)
 
         // Create {@link RecyclerView.ItemDecoration}
-        int spacingInPixel =
-                getResources().getDimensionPixelSize(R.dimen.grid_top_category_spacing);
-        GridSpacingItemDecoration gridSpacingItemDecoration =
-                new GridSpacingItemDecoration(2, spacingInPixel, false);
+        val spacingInPixel = resources.getDimensionPixelSize(R.dimen.grid_top_category_spacing)
+        val gridSpacingItemDecoration = GridSpacingItemDecoration(2, spacingInPixel, false)
 
         // Setup {link RecyclerView} for {@link Category}
-        mTopCategoryRecyclerView.setLayoutManager(topSecondaryCategoryLayoutManager);
-        mTopCategoryRecyclerView.setAdapter(mTopCategoryAdapter);
-        mTopCategoryRecyclerView.addItemDecoration(gridSpacingItemDecoration);
+        mTopCategoryRecyclerView!!.layoutManager = topSecondaryCategoryLayoutManager
+        mTopCategoryRecyclerView!!.adapter = mTopCategoryAdapter
+        mTopCategoryRecyclerView!!.addItemDecoration(gridSpacingItemDecoration)
     }
 
-    private void loadTopCategoryList() {
-        // TODO load top category
-        List<Category> categoryList = new ArrayList<>();
-
-        Category category =
-                new Category(1, "Antibiotic", "",
-                        "https://www.pharma-medicaments.com/wp-content/uploads/2022/01/3304746.jpg",
-                        null);
-
-        categoryList.add(category);
-        categoryList.add(category);
-        categoryList.add(category);
-        categoryList.add(category);
-        categoryList.add(category);
-        categoryList.add(category);
-
-        mTopCategoryAdapter.setList(categoryList);
-        mTopCategoryAdapter.setLoading(false);
-
-        mTopCategoryRecyclerView.setAdapter(null);
-        mTopCategoryRecyclerView.setAdapter(mTopCategoryAdapter);
+    private fun loadTopCategoryList() {
+        val secondaryCategoryEntities = mDb!!.secondaryCategoryDao()!!
+            .findTopCategories()
+        val categories: MutableList<Category> = ArrayList()
+        for (category in secondaryCategoryEntities!!) {
+            categories.add(Category(category!!.id!!.toInt(), category.name,
+                category.offerText, category.pictureUrl, null))
+        }
+        mTopCategoryAdapter!!.setList(categories)
+        mTopCategoryAdapter!!.setLoading(false)
+        mTopCategoryRecyclerView!!.adapter = null
+        mTopCategoryRecyclerView!!.adapter = mTopCategoryAdapter
     }
 
-    private void setupIntroCategory() {
-        LinearLayoutManager introSecondaryCategoryLayoutManager =
-                new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
-        mIntroCategoryAdapter =
-                new IntroCategoryAdapter(mContext, null,
-                        this, this);
+    private fun setupIntroCategory() {
+        val introSecondaryCategoryLayoutManager = LinearLayoutManager(
+            mContext, LinearLayoutManager.VERTICAL, false)
+        mIntroCategoryAdapter = IntroCategoryAdapter(mContext, null,
+            this, this)
 
         // Create {@link RecyclerView.ItemDecoration}
-        int spacingInPixel =
-                getResources().getDimensionPixelSize(R.dimen.grid_intro_category_spacing);
-        GridSpacingItemDecoration gridSpacingItemDecoration =
-                new GridSpacingItemDecoration(1, spacingInPixel, false);
-
-        mIntroCategoryRecyclerView.setLayoutManager(introSecondaryCategoryLayoutManager);
-        mIntroCategoryRecyclerView.setAdapter(mIntroCategoryAdapter);
-        mIntroCategoryRecyclerView.addItemDecoration(gridSpacingItemDecoration);
+        val spacingInPixel = resources.getDimensionPixelSize(R.dimen.grid_intro_category_spacing)
+        val gridSpacingItemDecoration = GridSpacingItemDecoration(1, spacingInPixel, false)
+        mIntroCategoryRecyclerView!!.layoutManager = introSecondaryCategoryLayoutManager
+        mIntroCategoryRecyclerView!!.adapter = mIntroCategoryAdapter
+        mIntroCategoryRecyclerView!!.addItemDecoration(gridSpacingItemDecoration)
     }
 
-    private void loadIntroCategoryList() {
-        // TODO load intro category
-        Product product =
-                new Product(1, "Doliprane", "Doliprane 1000mg",
-                        "Douleurs et fievre", 300,
-                        "https://www.pharma-medicaments.com/wp-content/uploads/2022/01/3304746.jpg",
-                        null, 120, null);
-
-        List<Product> productList = new ArrayList<>();
-
-        productList.add(product);
-        productList.add(product);
-        productList.add(product);
-        productList.add(product);
-
-        IntroCategory introCategory =
-                new IntroCategory(1, "Antibiotic", "Get the best deal today",
-                        productList);
-
-        List<IntroCategory> introCategoryList = new ArrayList<>();
-        introCategoryList.add(introCategory);
-        introCategoryList.add(introCategory);
-        introCategoryList.add(introCategory);
-        introCategoryList.add(introCategory);
-
-        mIntroCategoryAdapter.setList(introCategoryList);
-        mIntroCategoryAdapter.setLoading(false);
-
-        mIntroCategoryRecyclerView.setAdapter(null);
-        mIntroCategoryRecyclerView.setAdapter(mIntroCategoryAdapter);
+    private fun loadIntroCategoryList() {
+        val secondaryCategoryEntities = mDb!!.secondaryCategoryDao()!!
+            .findTopCategories()
+        val introCategories: MutableList<IntroCategory> = ArrayList()
+        var productEntities: List<ProductEntity?>?
+        for (category in secondaryCategoryEntities!!) {
+            productEntities = mDb!!.productDao()!!.findFourBySecondaryCategoryId(category!!.id)
+            val products: MutableList<Product> = ArrayList()
+            for (productEntity in productEntities!!) {
+                products.add(Product(productEntity!!.id, productEntity.mark,
+                    productEntity.name, productEntity.description,
+                    productEntity.price, productEntity.pictureUrl,
+                    null, 120, null))
+            }
+            introCategories.add(IntroCategory(category.id!!.toInt(), category.name,
+                category.offerText, products))
+        }
+        mIntroCategoryAdapter!!.setList(introCategories)
+        mIntroCategoryAdapter!!.setLoading(false)
+        mIntroCategoryRecyclerView!!.adapter = null
+        mIntroCategoryRecyclerView!!.adapter = mIntroCategoryAdapter
     }
 
-    @Override
-    public void onSecondaryCategoryClicked(Category category) {
-        Intent intent = new Intent(mContext, ProductListActivity.class);
-
-        intent.putExtra(ProductListActivity.EXTRA_CATEGORY_ID, category.getId());
-
-        startActivity(intent);
+    override fun onSecondaryCategoryClicked(category: Category?) {
+        val intent = Intent(mContext, ProductListActivity::class.java)
+        intent.putExtra(ProductListActivity.EXTRA_CATEGORY_ID, category!!.id.toLong())
+        startActivity(intent)
     }
 
-    @Override
-    public void onProductClicked(Product product) {
-        Intent intent = new Intent(mContext, ProductActivity.class);
-
-        intent.putExtra(ProductActivity.EXTRA_PRODUCT_ID, product.getId());
-
-        startActivity(intent);
+    override fun onProductClicked(product: Product?) {
+        val intent = Intent(mContext, ProductActivity::class.java)
+        intent.putExtra(ProductActivity.EXTRA_PRODUCT_ID, product!!.id.toLong())
+        startActivity(intent)
     }
 
-    @Override
-    public void onViewAllClicked(IntroCategory category) {
-        Intent intent = new Intent(mContext, ProductListActivity.class);
-
-        intent.putExtra(ProductListActivity.EXTRA_CATEGORY_ID, category.getId());
-
-        startActivity(intent);
+    override fun onViewAllClicked(category: IntroCategory?) {
+        val intent = Intent(mContext, ProductListActivity::class.java)
+        intent.putExtra(ProductListActivity.EXTRA_CATEGORY_ID, category!!.id.toLong())
+        startActivity(intent)
     }
 }

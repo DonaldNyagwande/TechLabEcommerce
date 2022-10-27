@@ -19,13 +19,35 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".test.TestActivity"
+            android:exported="true">
+        </activity>
+        <activity
+            android:name=".profile.ProfileActivity"
+            android:exported="false" />
+        <activity
             android:name=".profile.ShoppingBasketActivity"
+            android:exported="false" />
+        <activity
+            android:name=".profile.CommandActivity"
             android:exported="false" />
         <activity
             android:name=".profile.RecentlyViewedActivity"
             android:exported="false" />
         <activity
+            android:name=".profile.RecentSearchedActivity"
+            android:exported="false" />
+        <activity
             android:name=".profile.FavoriteActivity"
+            android:exported="false" />
+        <activity
+            android:name=".profile.AccountActivity"
+            android:exported="false" />
+        <activity
+            android:name=".profile.AddressActivity"
+            android:exported="false" />
+        <activity
+            android:name=".profile.ChangePasswordActivity"
             android:exported="false" />
         <activity
             android:name=".ProductActivity"
@@ -37,7 +59,10 @@
             android:name=".AboutActivity"
             android:exported="false" />
         <activity
-            android:name=".profile.ProfileActivity"
+            android:name=".SignUpActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SignInActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

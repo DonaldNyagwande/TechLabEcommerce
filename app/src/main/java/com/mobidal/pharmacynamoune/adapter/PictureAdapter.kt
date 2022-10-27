@@ -1,99 +1,79 @@
-package com.mobidal.pharmacynamoune.adapter;
+package com.mobidal.pharmacynamoune.adapter
 
-import android.content.Context;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.content.Context
+import com.mobidal.pharmacynamoune.adapter.PictureAdapter.OnPictureClickListener
+import androidx.recyclerview.widget.RecyclerView
+import com.mobidal.pharmacynamoune.adapter.PictureAdapter.PictureViewHolder
+import android.view.ViewGroup
+import android.view.LayoutInflater
+import android.view.View
+import android.widget.ImageView
+import com.mobidal.pharmacynamoune.R
+import butterknife.BindView
+import butterknife.ButterKnife
+import com.mobidal.pharmacynamoune.model.Picture
+import com.squareup.picasso.Picasso
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.mobidal.pharmacynamoune.R;
-import com.mobidal.pharmacynamoune.model.Picture;
-import com.squareup.picasso.Picasso;
-
-import java.util.List;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
-public class PictureAdapter extends RecyclerView.Adapter<PictureAdapter.PictureViewHolder> {
-
-    private Context mContext;
-    private List<Picture> mPictureList;
-    private OnPictureClickListener mOnPictureClickListener;
-
-    public PictureAdapter(Context mContext, List<Picture> mPictureList,
-                          OnPictureClickListener mOnPictureClickListener) {
-        this.mContext = mContext;
-        this.mPictureList = mPictureList;
-        this.mOnPictureClickListener = mOnPictureClickListener;
-    }
-
-    @NonNull
-    @Override
-    public PictureViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+class PictureAdapter(
+    private val mContext: Context, private var mPictureList: List<Picture>?,
+    private val mOnPictureClickListener: OnPictureClickListener?
+) : RecyclerView.Adapter<PictureViewHolder>() {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PictureViewHolder {
         // Create item view for RecyclerView
-        View itemView = LayoutInflater.from(mContext)
-                .inflate(R.layout.item_picture, parent, false);
-
-        return new PictureViewHolder(itemView);
+        val itemView = LayoutInflater.from(mContext)
+            .inflate(R.layout.item_picture, parent, false)
+        return PictureViewHolder(itemView)
     }
 
-    @Override
-    public void onBindViewHolder(@NonNull PictureViewHolder holder, int position) {
-        holder.bind(mPictureList.get(position));
+    override fun onBindViewHolder(holder: PictureViewHolder, position: Int) {
+        holder.bind(mPictureList!![position])
     }
 
-    @Override
-    public int getItemCount() {
-        return mPictureList == null ? 0 : mPictureList.size();
+    override fun getItemCount(): Int {
+        return if (mPictureList == null) 0 else mPictureList!!.size
     }
 
-    public void setList(List<Picture> list) {
-        mPictureList = list;
-        notifyDataSetChanged();
+    fun setList(list: List<Picture>?) {
+        mPictureList = list
+        notifyDataSetChanged()
     }
 
-    class PictureViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-
+    inner class PictureViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
+        View.OnClickListener {
+        @JvmField
         @BindView(R.id.iv_picture)
-        ImageView mPictureImageView;
+        var mPictureImageView: ImageView? = null
 
-        public PictureViewHolder(@NonNull View itemView) {
-            super(itemView);
+        init {
 
             // Bind TopArticle views
-            ButterKnife.bind(this, itemView);
+            ButterKnife.bind(this, itemView)
 
             // Setup OnClickListener for TopArticle
-            itemView.setOnClickListener(this);
+            itemView.setOnClickListener(this)
         }
 
-        @Override
-        public void onClick(View view) {
+        override fun onClick(view: View) {
             if (mOnPictureClickListener != null) {
                 // Get selected item position
-                int picturePosition = getAdapterPosition();
+                val picturePosition = adapterPosition
                 // Get selected top article
-                Picture picture = mPictureList.get(picturePosition);
+                val picture = mPictureList!![picturePosition]
                 // Callback onTopArticleClicked
-                mOnPictureClickListener.onPictureClicked(picture);
+                mOnPictureClickListener.onPictureClicked(picture)
             }
         }
 
-        public void bind(Picture picture) {
+        fun bind(picture: Picture) {
             // TODO 1 get image using picasso
             Picasso.get()
-                    .load(picture.getPictureUrl())
-                    .placeholder(R.drawable.ic_image_placeholder)
-                    .into(mPictureImageView);
+                .load(picture.pictureUrl)
+                .placeholder(R.drawable.ic_image_placeholder)
+                .into(mPictureImageView)
         }
     }
 
-    public interface OnPictureClickListener {
-        void onPictureClicked(Picture picture);
+    interface OnPictureClickListener {
+        fun onPictureClicked(picture: Picture?)
     }
-
 }

@@ -1,167 +1,141 @@
-package com.mobidal.pharmacynamoune.adapter;
+package com.mobidal.pharmacynamoune.adapter
 
-import android.content.Context;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.content.Context
+import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
+import butterknife.BindView
+import butterknife.ButterKnife
+import com.facebook.shimmer.ShimmerFrameLayout
+import com.mobidal.pharmacynamoune.R
+import com.mobidal.pharmacynamoune.model.Category
+import com.squareup.picasso.Picasso
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.facebook.shimmer.ShimmerFrameLayout;
-import com.mobidal.pharmacynamoune.R;
-import com.mobidal.pharmacynamoune.model.Category;
-import com.squareup.picasso.Picasso;
-
-import java.util.List;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
-public class SecondaryCategoryAdapter extends RecyclerView
-        .Adapter<RecyclerView.ViewHolder> {
-
-    private static final int SHIMMER_ITEM_COUNT = 9;
-
-    private Context mContext;
-    private List<Category> mCategoryList;
-    private OnSecondaryCategoryClickListener mOnSecondaryCategoryClickListener;
-
-    private boolean mIsLoading = true;
-    private int mShimmerItemCount = SHIMMER_ITEM_COUNT;
-
-    public SecondaryCategoryAdapter(Context mContext,
-                                    List<Category> mCategoryList,
-                                    OnSecondaryCategoryClickListener mOnSecondaryCategoryClickListener) {
-        this.mContext = mContext;
-        this.mCategoryList = mCategoryList;
-        this.mOnSecondaryCategoryClickListener = mOnSecondaryCategoryClickListener;
-    }
-
-    @NonNull
-    @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        int layoutId = R.layout.item_placeholder_secondary_category;
-
+class SecondaryCategoryAdapter(
+    private val mContext: Context,
+    private var mCategoryList: List<Category>?,
+    private val mOnSecondaryCategoryClickListener: OnSecondaryCategoryClickListener?
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    private var mIsLoading = true
+    private var mShimmerItemCount = SHIMMER_ITEM_COUNT
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        var layoutId = R.layout.item_placeholder_secondary_category
         if (!mIsLoading) {
-            layoutId = R.layout.item_secondary_category;
+            layoutId = R.layout.item_secondary_category
         }
-
-        View itemView = LayoutInflater.from(mContext)
-                .inflate(layoutId, parent, false);
-
-        if (mIsLoading) {
-            return new ShimmerViewHolder(itemView);
+        val itemView = LayoutInflater.from(mContext)
+            .inflate(layoutId, parent, false)
+        return if (mIsLoading) {
+            ShimmerViewHolder(itemView)
         } else {
-            return new SecondaryCategoryViewHolder(itemView);
+            SecondaryCategoryViewHolder(itemView)
         }
     }
 
-    @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (mIsLoading) {
-            ShimmerViewHolder viewHolder = (ShimmerViewHolder) holder;
-            viewHolder.startShimmer();
+            val viewHolder = holder as ShimmerViewHolder
+            viewHolder.startShimmer()
         } else {
-            SecondaryCategoryViewHolder viewHolder = (SecondaryCategoryViewHolder) holder;
-            viewHolder.bind(mCategoryList.get(position));
+            val viewHolder = holder as SecondaryCategoryViewHolder
+            viewHolder.bind(mCategoryList!![position])
         }
     }
 
-    @Override
-    public int getItemCount() {
-        if (mIsLoading) {
-            return mShimmerItemCount;
+    override fun getItemCount(): Int {
+        return if (mIsLoading) {
+            mShimmerItemCount
         } else {
-            return mCategoryList == null ? 0 : mCategoryList.size();
+            if (mCategoryList == null) 0 else mCategoryList!!.size
         }
     }
 
-    public void setList(List<Category> categoryList) {
-        mCategoryList = categoryList;
-        notifyDataSetChanged();
+    fun setList(categoryList: List<Category>?) {
+        mCategoryList = categoryList
+        notifyDataSetChanged()
     }
 
-    public void setLoading(boolean isLoading) {
-        mIsLoading = isLoading;
+    fun setLoading(isLoading: Boolean) {
+        mIsLoading = isLoading
     }
 
-    public void setShimmerItemCount(int shimmerItemCount) {
-        mShimmerItemCount = shimmerItemCount;
+    fun setShimmerItemCount(shimmerItemCount: Int) {
+        mShimmerItemCount = shimmerItemCount
     }
 
-    class SecondaryCategoryViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-
+    internal inner class SecondaryCategoryViewHolder(itemView: View) :
+        RecyclerView.ViewHolder(itemView), View.OnClickListener {
+        @JvmField
         @BindView(R.id.iv_picture)
-        ImageView mPictureImageView;
-        @BindView(R.id.tv_name)
-        TextView mNameTextView;
+        var mPictureImageView: ImageView? = null
 
-        public SecondaryCategoryViewHolder(@NonNull View itemView) {
-            super(itemView);
+        @JvmField
+        @BindView(R.id.tv_name)
+        var mNameTextView: TextView? = null
+
+        init {
 
             // Bind views
-            ButterKnife.bind(this, itemView);
+            ButterKnife.bind(this, itemView)
 
             // Setup OnClickListener
-            itemView.setOnClickListener(this);
+            itemView.setOnClickListener(this)
         }
 
-        @Override
-        public void onClick(View v) {
+        override fun onClick(v: View) {
             if (mOnSecondaryCategoryClickListener != null) {
                 // get selected item position
-                int itemPosition = getAdapterPosition();
+                val itemPosition = adapterPosition
                 // get selected item
-                Category selectedSecondaryCategory =
-                        mCategoryList.get(itemPosition);
+                val selectedSecondaryCategory = mCategoryList!![itemPosition]
                 // Callback for the selected item
                 mOnSecondaryCategoryClickListener
-                        .onSecondaryCategoryClicked(selectedSecondaryCategory);
+                    .onSecondaryCategoryClicked(selectedSecondaryCategory)
             }
         }
 
-        public void bind(Category category) {
+        fun bind(category: Category) {
             Picasso.get()
-                    .load(category.getPictureUrl())
-                    .placeholder(R.drawable.ic_image_placeholder)
-                    .into(mPictureImageView);
-
-            Log.v("SCA", category.getPictureUrl());
-
-            mNameTextView.setText(category.getName());
+                .load(category.pictureUrl)
+                .placeholder(R.drawable.ic_image_placeholder)
+                .into(mPictureImageView)
+            Log.v("SCA", category.pictureUrl)
+            mNameTextView!!.text = category.name
         }
     }
 
-    class ShimmerViewHolder extends RecyclerView.ViewHolder {
-
+    internal inner class ShimmerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        @JvmField
         @BindView(R.id.sfl_category)
-        ShimmerFrameLayout mCategoryShimmerFrameLayout;
+        var mCategoryShimmerFrameLayout: ShimmerFrameLayout? = null
 
-        public ShimmerViewHolder(@NonNull View itemView) {
-            super(itemView);
+        init {
 
             // Bind views
-            ButterKnife.bind(this, itemView);
+            ButterKnife.bind(this, itemView)
         }
 
-        public void startShimmer() {
+        fun startShimmer() {
             // Start shimmer
-            mCategoryShimmerFrameLayout.startShimmer();
+            mCategoryShimmerFrameLayout!!.startShimmer()
         }
 
-        public void stopShimmer() {
+        fun stopShimmer() {
             // Stop shimmer
-            mCategoryShimmerFrameLayout.stopShimmer();
-            mCategoryShimmerFrameLayout.setShimmer(null);
+            mCategoryShimmerFrameLayout!!.stopShimmer()
+            mCategoryShimmerFrameLayout!!.setShimmer(null)
         }
     }
 
-    public interface OnSecondaryCategoryClickListener {
-        void onSecondaryCategoryClicked(Category secondaryCategory);
+    interface OnSecondaryCategoryClickListener {
+        fun onSecondaryCategoryClicked(secondaryCategory: Category?)
     }
 
+    companion object {
+        private const val SHIMMER_ITEM_COUNT = 9
+    }
 }

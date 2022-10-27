@@ -1,45 +1,34 @@
-package com.mobidal.pharmacynamoune.adapter;
+package com.mobidal.pharmacynamoune.adapter
 
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.viewpager2.adapter.FragmentStateAdapter;
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import java.util.ArrayList
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class MainFragmentAdapter extends FragmentStateAdapter {
-
-    List<Fragment> mFragmentList = new ArrayList<>();
-    List<String> mTitleList = new ArrayList<>();
-    List<Integer> mIconResourceIdList = new ArrayList<>();
-
-    public MainFragmentAdapter(@NonNull FragmentActivity fragmentActivity) {
-        super(fragmentActivity);
+class MainFragmentAdapter(fragmentActivity: FragmentActivity) :
+    FragmentStateAdapter(fragmentActivity) {
+    var mFragmentList: MutableList<Fragment> = ArrayList()
+    var mTitleList: MutableList<String> = ArrayList()
+    var mIconResourceIdList: MutableList<Int> = ArrayList()
+    override fun createFragment(position: Int): Fragment {
+        return mFragmentList[position]
     }
 
-    @NonNull
-    @Override
-    public Fragment createFragment(int position) {
-        return mFragmentList.get(position);
+    override fun getItemCount(): Int {
+        return mFragmentList.size
     }
 
-    @Override
-    public int getItemCount() {
-        return mFragmentList.size();
+    fun getIconResourceId(position: Int): Int {
+        return mIconResourceIdList[position]
     }
 
-    public int getIconResourceId(int position) {
-        return mIconResourceIdList.get(position);
+    fun addFragment(fragment: Fragment, title: String, iconResourceId: Int) {
+        mFragmentList.add(fragment)
+        mTitleList.add(title)
+        mIconResourceIdList.add(iconResourceId)
     }
 
-    public void addFragment(Fragment fragment, String title, int iconResourceId) {
-        mFragmentList.add(fragment);
-        mTitleList.add(title);
-        mIconResourceIdList.add(iconResourceId);
-    }
-
-    public String getName(int position) {
-        return mTitleList.get(position);
+    fun getName(position: Int): String {
+        return mTitleList[position]
     }
 }

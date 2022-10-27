@@ -5,6 +5,7 @@
     <dimen name="grid_secondary_category_spacing">8dp</dimen>
     <dimen name="grid_primary_category_spacing">16dp</dimen>
     <dimen name="grid_product_spacing">8dp</dimen>
+    <dimen name="grid_command_spacing">16dp</dimen>
     <dimen name="shimmer_product_mark">60dp</dimen>
     <dimen name="shimmer_product_name">180dp</dimen>
     <dimen name="shimmer_product_view_number">50dp</dimen>
